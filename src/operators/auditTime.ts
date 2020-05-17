@@ -1,5 +1,5 @@
 /**
- * audit operator
+ * Audit time operator
  *
  * The original implementation is just using audit with a timer
  * but this implementation uses timeout.
