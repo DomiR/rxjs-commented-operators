@@ -22,7 +22,6 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 					// The original operator handles both cases
 					// in a very otimized manner, but we do
 					// not have to do so.
-
 					if (startBufferEvery != null) {
 						count += 1;
 						// If the start bufferEvery is set, we need to
