@@ -11,19 +11,17 @@ import { Observable, of, Subscription, timer, interval, empty, VirtualTimeSchedu
 import { logValue } from '../utils';
 import { take, map } from 'rxjs/operators';
 
-export function find<T>(predicate?: (value: T, index?: number, source?: Observable<T>) => boolean) {
+export function elementAt<T>(index: number, defaultValue?: T) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
 			let i = 0;
-			let shouldComplete = true;
 
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
-					if (predicate == null || predicate(value, i++, source)) {
+					if (index === i++) {
 						observer.next(value);
 						observer.complete();
-						shouldComplete = false;
 					}
 				},
 				err => {
@@ -32,9 +30,10 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 				},
 				() => {
 					logValue('source complete');
-					if (shouldComplete) {
-						observer.complete();
+					if (i < index) {
+						observer.next(defaultValue);
 					}
+					observer.complete();
 				}
 			);
 
@@ -47,8 +46,11 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
-	.pipe(take(5))
-	.pipe(find(i => i < 10000))
+	.pipe(
+		take(5),
+		map(i => ({ time: i }))
+	)
+	.pipe(elementAt(1))
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});

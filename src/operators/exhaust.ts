@@ -9,21 +9,29 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { take, exhaust, map } from 'rxjs/operators';
 
-export function find<T>(predicate?: (value: T, index?: number, source?: Observable<T>) => boolean) {
+export function every<V, T extends Observable<V>>() {
 	return (source: Observable<T>) =>
-		new Observable<T>(observer => {
-			let i = 0;
-			let shouldComplete = true;
+		new Observable<V>(observer => {
+			let runningSubscription: Subscription = null;
+			let didComplete = false;
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
-					if (predicate == null || predicate(value, i++, source)) {
-						observer.next(value);
-						observer.complete();
-						shouldComplete = false;
+					if (runningSubscription == null) {
+						runningSubscription = value.subscribe(
+							v => {
+								observer.next(v);
+							},
+							innerError => {},
+							() => {
+								runningSubscription = null;
+								if (didComplete) {
+									observer.complete();
+								}
+							}
+						);
 					}
 				},
 				err => {
@@ -32,7 +40,9 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 				},
 				() => {
 					logValue('source complete');
-					if (shouldComplete) {
+					// observer.complete();
+					didComplete = true;
+					if (runningSubscription == null) {
 						observer.complete();
 					}
 				}
@@ -40,6 +50,7 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 
 			return new Subscription(() => {
 				sourceSubscription.unsubscribe();
+				runningSubscription?.unsubscribe();
 			});
 		});
 }
@@ -47,8 +58,11 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
-	.pipe(take(5))
-	.pipe(find(i => i < 10000))
+	.pipe(
+		take(5),
+		map(i => interval(1000))
+	)
+	.pipe(exhaust())
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});

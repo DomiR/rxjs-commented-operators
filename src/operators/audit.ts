@@ -11,10 +11,12 @@ import { logValue } from '../utils';
 export function audit<T, U>(durationSelector: (value: T) => Observable<U>) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
-			let value: T = null;
+			let latestValue: T = null;
 			let durationSubscription: Subscription = null;
 			const sourceSubscription = source.subscribe(
 				value => {
+					latestValue = value;
+
 					// As soon as we get our first value we have to descide:
 					// If we have no duration selector running,
 					// we call our durationSelector function to get an observable.
@@ -28,8 +30,8 @@ export function audit<T, U>(durationSelector: (value: T) => Observable<U>) {
 								// we unsubscribe from it.
 								durationSubscription.unsubscribe();
 								durationSubscription = null;
-								if (value != null) {
-									observer.next(value);
+								if (latestValue != null) {
+									observer.next(latestValue);
 								}
 							},
 							durationErr => {
@@ -41,16 +43,11 @@ export function audit<T, U>(durationSelector: (value: T) => Observable<U>) {
 								// we do the same here as when getting a value
 								durationSubscription.unsubscribe();
 								durationSubscription = null;
-								if (value != null) {
+								if (latestValue != null) {
 									observer.next(value);
 								}
 							}
 						);
-					}
-					// In case a duration subscription is running we
-					// cache the latest value for later.
-					else {
-						value = value;
 					}
 				},
 				err => {

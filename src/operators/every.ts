@@ -9,21 +9,18 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
-export function find<T>(predicate?: (value: T, index?: number, source?: Observable<T>) => boolean) {
+export function every<T>(predicate: (value: T, index: number, source: Observable<T>) => boolean) {
 	return (source: Observable<T>) =>
-		new Observable<T>(observer => {
-			let i = 0;
-			let shouldComplete = true;
-
+		new Observable<boolean>(observer => {
+			let stillEvery = true;
+			let index = 0;
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
-					if (predicate == null || predicate(value, i++, source)) {
-						observer.next(value);
-						observer.complete();
-						shouldComplete = false;
+					if (stillEvery && !predicate(value, index++, source)) {
+						stillEvery = false;
 					}
 				},
 				err => {
@@ -32,9 +29,8 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 				},
 				() => {
 					logValue('source complete');
-					if (shouldComplete) {
-						observer.complete();
-					}
+					observer.next(stillEvery);
+					observer.complete();
 				}
 			);
 
@@ -48,7 +44,7 @@ const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
 	.pipe(take(5))
-	.pipe(find(i => i < 10000))
+	.pipe(every(v => v < 100000))
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});

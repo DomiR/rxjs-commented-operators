@@ -9,21 +9,23 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
-export function find<T>(predicate?: (value: T, index?: number, source?: Observable<T>) => boolean) {
+export function distinctUntilChanged<T, K>(
+	compare?: (x: K, y: K) => boolean,
+	keySelector?: (x: T) => K
+) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
-			let i = 0;
-			let shouldComplete = true;
+			let lastKey = null;
 
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
-					if (predicate == null || predicate(value, i++, source)) {
+					const key: any = keySelector(value) ?? value;
+					if (compare?.(key as any, lastKey as any) ?? key === lastKey) {
 						observer.next(value);
-						observer.complete();
-						shouldComplete = false;
+						lastKey = key;
 					}
 				},
 				err => {
@@ -32,9 +34,7 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 				},
 				() => {
 					logValue('source complete');
-					if (shouldComplete) {
-						observer.complete();
-					}
+					observer.complete();
 				}
 			);
 
@@ -43,12 +43,11 @@ export function find<T>(predicate?: (value: T, index?: number, source?: Observab
 			});
 		});
 }
-
 const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
 	.pipe(take(5))
-	.pipe(find(i => i < 10000))
+	.pipe(distinctUntilChanged())
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});
