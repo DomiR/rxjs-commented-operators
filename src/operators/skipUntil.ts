@@ -9,23 +9,17 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { take, skip } from 'rxjs/operators';
 
-export function first<T>(
-	predicate?: (value: T, index?: number, source?: Observable<T>) => boolean
-) {
+export function skipUntil<T>(notifier: Observable<any>) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
-			let i = 0;
-			let shouldComplete = true;
-
+			let isSkipping = true;
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
-					if (predicate == null || predicate(value, i++, source)) {
+					if (!isSkipping) {
 						observer.next(value);
-						observer.complete();
-						shouldComplete = false;
 					}
 				},
 				err => {
@@ -34,14 +28,21 @@ export function first<T>(
 				},
 				() => {
 					logValue('source complete');
-					if (shouldComplete) {
-						observer.complete();
-					}
+					observer.complete();
 				}
+			);
+
+			const notificationSubscription = notifier.subscribe(
+				value => {
+					isSkipping = false;
+				},
+				err => {},
+				() => {}
 			);
 
 			return new Subscription(() => {
 				sourceSubscription.unsubscribe();
+				notificationSubscription.unsubscribe();
 			});
 		});
 }
@@ -50,7 +51,7 @@ const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
 	.pipe(take(5))
-	.pipe(first(i => i < 10000))
+	.pipe(skipUntil(timer(2000)))
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});
