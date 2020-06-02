@@ -94,6 +94,6 @@
 - [x] [windowCount](https://rxjs-dev.firebaseapp.com/api/operators/windowCount)
 - [x] [windowTime](https://rxjs-dev.firebaseapp.com/api/operators/windowTime)
 - [x] [windowToggle](https://rxjs-dev.firebaseapp.com/api/operators/windowToggle)
-- [ ] [windowWhen](https://rxjs-dev.firebaseapp.com/api/operators/windowWhen)
-- [ ] [withLatestFrom](https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom)
+- [x] [windowWhen](https://rxjs-dev.firebaseapp.com/api/operators/windowWhen)
+- [x] [withLatestFrom](https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom)
 - [ ] [zipAll](https://rxjs-dev.firebaseapp.com/api/operators/zipAll)
