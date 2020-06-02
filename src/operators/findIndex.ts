@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Find index operator
  *
  * @see
  *

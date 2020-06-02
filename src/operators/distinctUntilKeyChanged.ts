@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Distict until key changed operator
  *
  * @see
  *

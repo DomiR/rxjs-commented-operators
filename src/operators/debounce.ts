@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Debounce operator
  *
  * @see
  *

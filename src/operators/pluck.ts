@@ -1,5 +1,5 @@
 /**
- * audit operator
+ * Pluck operator
  *
  * @author Dominique Rau [domi.github@gmail.com](mailto:domi.github@gmail.com)
  * @version 0.0.1

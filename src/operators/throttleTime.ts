@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Throttle time operator
  *
  * @see
  *

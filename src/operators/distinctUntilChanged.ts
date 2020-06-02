@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Distinct until changed operator
  *
  * @see
  *

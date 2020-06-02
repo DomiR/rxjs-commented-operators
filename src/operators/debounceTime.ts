@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Debounce time operator
  *
  * @see
  *
@@ -16,7 +16,7 @@ export function debounceTime<T>(duration: number) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
 			let debouncedValue: T;
-			let durationTimer: number;
+			let durationTimer: NodeJS.Timeout;
 
 			// We subscribe to the source observable as we usuually do.
 			// As the operator has a predicate argument we apply it

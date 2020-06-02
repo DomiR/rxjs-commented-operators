@@ -1,5 +1,5 @@
 /**
- * last operator
+ * Exhaust map operator
  *
  * @see
  *
