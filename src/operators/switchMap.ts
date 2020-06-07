@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { switchMap as switchMapOriginal } from 'rxjs/operators';
 
 export function switchMap<T, O extends Observable<any>>(project: (value: T, index: number) => O) {
 	return (source: Observable<T>) =>

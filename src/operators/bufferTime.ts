@@ -7,8 +7,9 @@
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
+import { bufferTime as bufferTimeOriginal, take } from 'rxjs/operators';
 
-export function bufferCount<T>(bufferTimeSpan: number) {
+export function bufferTime<T>(bufferTimeSpan: number) {
 	return (source: Observable<T>) =>
 		new Observable<T[]>(observer => {
 			let buffer: T[] = [];
@@ -34,6 +35,9 @@ export function bufferCount<T>(bufferTimeSpan: number) {
 				},
 				() => {
 					logValue('source complete');
+					if (buffer.length > 0) {
+						observer.next(buffer);
+					}
 					observer.complete();
 				}
 			);
@@ -47,7 +51,7 @@ export function bufferCount<T>(bufferTimeSpan: number) {
 }
 
 interval(500)
-	.pipe(bufferCount(1000))
+	.pipe(take(5), bufferTime(1000))
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

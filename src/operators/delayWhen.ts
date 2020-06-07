@@ -11,6 +11,7 @@ import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
+import { delayWhen as delayWhenOriginal } from 'rxjs/operators';
 
 export function delayWhen<T, R>(
 	delayDurationSelector: (value: T, index: number) => Observable<any>

@@ -8,6 +8,7 @@
 import { interval, Observable, SchedulerLike, Subscription } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
 import { logValue } from '../utils';
+import { timeInterval as timeIntervalOriginal, take } from 'rxjs/operators';
 
 export function timeInterval<T>(scheduler: SchedulerLike = async) {
 	return (source: Observable<T>) =>
@@ -31,6 +32,7 @@ export function timeInterval<T>(scheduler: SchedulerLike = async) {
 }
 
 interval(100)
+	.pipe(take(10))
 	.pipe(timeInterval())
 	.subscribe(v => {
 		logValue('value: ', v);

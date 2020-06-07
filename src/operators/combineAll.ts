@@ -6,8 +6,8 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { logValue } from '../utils';
+import { combineAll as combineAllOriginal } from 'rxjs/operators';
 
 export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
 	return (source: Observable<T>) =>
@@ -36,8 +36,11 @@ export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
 					let NONE = {};
 					let someInnerObservableDidNotRespondYet = true;
 					for (let i = 0; i < innerObservables.length; i++) {
-						const innerObservable = innerObservables[i];
 						innerObservablesLastValues[i] = NONE;
+					}
+
+					for (let i = 0; i < innerObservables.length; i++) {
+						const innerObservable = innerObservables[i];
 						// Here we only consider inner observables, but rxjs will also handle all sorts of
 						// values like arrays, promises and the the like.
 						const innerSubscription = innerObservable.subscribe(
@@ -51,6 +54,9 @@ export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
 									someInnerObservableDidNotRespondYet = innerObservablesLastValues.some(
 										v => v === NONE
 									);
+								}
+
+								if (someInnerObservableDidNotRespondYet) {
 									return;
 								}
 
@@ -82,3 +88,14 @@ export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
 			return combinedSubscription;
 		});
 }
+
+of(of(1, 2, 3), of(4, 5, 6), of(7, 8, 9))
+	.pipe(
+		combineAll((a, b, c) => {
+			return `${a}-${b}-${c}`;
+		})
+	)
+	.subscribe(
+		x => console.log(x),
+		err => console.log(err)
+	);

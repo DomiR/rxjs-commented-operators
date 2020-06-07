@@ -9,7 +9,7 @@
 
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
+import { defaultIfEmpty as defaultIfEmptyOriginal } from 'rxjs/operators';
 
 export function defaultIfEmpty<T, R>(defaultValue: R = null) {
 	return (source: Observable<T>) =>

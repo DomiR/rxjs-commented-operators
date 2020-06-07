@@ -6,6 +6,15 @@
  */
 
 import { Observable, of, Subscription, Subject, GroupedObservable, OperatorFunction } from 'rxjs';
+import {
+	groupBy as groupByOriginal,
+	mergeAll,
+	mergeMap,
+	concatAll,
+	combineAll,
+	toArray,
+	map,
+} from 'rxjs/operators';
 
 export function groupBy<T, K, R>(
 	keySelector: (value: T) => K,
@@ -65,8 +74,12 @@ export function groupBy<T, K, R>(
 		});
 }
 
-of(1, 2, 3)
-	.pipe(groupBy(v => v))
+of(1, 2, 2, 3)
+	.pipe(
+		groupBy(v => v),
+		map((v: any, i) => v.pipe(map(v => ({ group: i, value: v })))),
+		mergeAll()
+	)
 	.subscribe(v => {
 		console.log('value: ', v);
 	});

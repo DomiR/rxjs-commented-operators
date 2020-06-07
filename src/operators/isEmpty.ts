@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription } from 'rxjs';
+import { isEmpty as isEmptyOriginal } from 'rxjs/operators';
 
 export function isEmpty() {
 	return (source: Observable<any>) =>

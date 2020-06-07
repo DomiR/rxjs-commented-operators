@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { windowToggle as windowToggleOriginal } from 'rxjs/operators';
 
 export function windowToggle<T, O>(
 	openings: Observable<O>,
@@ -64,8 +65,13 @@ export function windowToggle<T, O>(
 		});
 }
 
-interval(500)
-	.pipe(windowToggle(interval(1000).pipe(take(3)), value => timer(1000)))
+let index = 0;
+interval(100)
+	.pipe(take(10))
+	.pipe(windowToggle(interval(500).pipe(take(3)), value => timer(200)))
 	.subscribe(v => {
-		logValue('value: ', v);
+		let obsIndex = index++;
+		v.subscribe(x => {
+			logValue('value: ', x, ' from: ', obsIndex);
+		});
 	});

@@ -9,7 +9,6 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
 
 export function elementAt<T>(index: number, defaultValue?: T) {
 	return (source: Observable<T>) =>
@@ -43,14 +42,8 @@ export function elementAt<T>(index: number, defaultValue?: T) {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(
-		take(5),
-		map(i => ({ time: i }))
-	)
+of(1, 2, 3)
 	.pipe(elementAt(1))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

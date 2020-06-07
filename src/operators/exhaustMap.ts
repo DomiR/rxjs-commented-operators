@@ -7,9 +7,10 @@
  * @version 0.0.1
  */
 
-import { interval, Observable, Subscription } from 'rxjs';
+import { interval, Observable, Subscription, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { logValue } from '../utils';
+import { exhaustMap as exhaustMapOriginal } from 'rxjs/operators';
 
 export function exhaustMap<T, R, O extends Observable<R>>(project: (value: T, index: number) => O) {
 	return (source: Observable<T>) =>
@@ -57,11 +58,9 @@ export function exhaustMap<T, R, O extends Observable<R>>(project: (value: T, in
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
+of(1, 2, 3)
 	.pipe(take(5))
-	.pipe(exhaustMap(i => interval(1000)))
+	.pipe(exhaustMap(i => of(`what: ${i}`)))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

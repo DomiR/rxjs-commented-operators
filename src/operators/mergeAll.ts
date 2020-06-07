@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { mergeAll as mergeAllOriginal } from 'rxjs/operators';
 
 export function mergeAll<T>(concurrent: number = Number.POSITIVE_INFINITY) {
 	return (source: Observable<Observable<T>>) =>
@@ -54,8 +55,8 @@ export function mergeAll<T>(concurrent: number = Number.POSITIVE_INFINITY) {
 		});
 }
 
-of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(mergeAll())
+of(of(1, 2, 3), of(4, 5, 6))
+	.pipe(mergeAllOriginal())
 	.subscribe(v => {
 		console.log('value: ', v);
 	});

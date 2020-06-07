@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription } from 'rxjs';
+import { map as mapOriginal } from 'rxjs/operators';
 
 export function map<T, U>(cb: (v: T) => U) {
 	return (source: Observable<T>) =>

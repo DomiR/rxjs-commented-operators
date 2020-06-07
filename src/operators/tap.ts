@@ -5,8 +5,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval } from 'rxjs';
+import { Observable, of, Subscription, timer, interval, range } from 'rxjs';
 import { logValue } from '../utils';
+import { tap as tapOriginal } from 'rxjs/operators';
 
 export function tap<T>(cb: (value: T) => void) {
 	return (source: Observable<T>) =>
@@ -28,9 +29,9 @@ export function tap<T>(cb: (value: T) => void) {
 		});
 }
 
-interval(100)
+range(1, 10)
 	.pipe(
-		tap(v => {
+		tapOriginal(v => {
 			console.log('tapped value', v);
 		})
 	)

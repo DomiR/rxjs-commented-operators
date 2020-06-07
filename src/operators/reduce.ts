@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { isArray } from 'util';
+import { reduce as reduceOriginal } from 'rxjs/operators';
 
 export function reduce<T, R>(
 	accumulator: (acc: T | R, value: T, index?: number) => T | R,
@@ -36,7 +37,7 @@ export function reduce<T, R>(
 	};
 }
 
-interval(100)
+of(1, 2, 3)
 	.pipe(reduce((acc, val) => acc + val, 0))
 	.subscribe(v => {
 		logValue('value: ', v);

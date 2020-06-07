@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription } from 'rxjs';
+import { ignoreElements as ignoreElementsOriginal } from 'rxjs/operators';
 
 export function ignoreElements() {
 	return (source: Observable<any>) =>

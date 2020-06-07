@@ -10,11 +10,12 @@
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
+import { auditTime as auditTimeOriginal, take } from 'rxjs/operators';
 
 export function auditTime<T, U>(duration: number) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
-			let value: T = null;
+			let auditValue: T = null;
 			let durationTimer = null;
 			const sourceSubscription = source.subscribe(
 				value => {
@@ -25,14 +26,14 @@ export function auditTime<T, U>(duration: number) {
 						durationTimer = setTimeout(() => {
 							durationTimer = null;
 							if (value != null) {
-								observer.next(value);
+								observer.next(auditValue);
 							}
 						}, duration);
 					}
 					// In case a duration subscription is running we
 					// cache the latest value for later.
 					else {
-						value = value;
+						auditValue = value;
 					}
 				},
 				err => {
@@ -52,7 +53,7 @@ export function auditTime<T, U>(duration: number) {
 }
 
 interval(100)
-	.pipe(auditTime(300))
+	.pipe(auditTime(300), take(5))
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

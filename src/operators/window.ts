@@ -5,8 +5,9 @@
  * @version 0.0.1
  */
 
-import { interval, Observable, SchedulerLike, Subscription, Subject, observable } from 'rxjs';
+import { interval, Observable, Subscription, Subject, timer } from 'rxjs';
 import { logValue } from '../utils';
+import { window as windowOriginal, take } from 'rxjs/operators';
 
 export function window<T>(windowBoundaries: Observable<any>) {
 	return (source: Observable<T>) =>
@@ -42,8 +43,13 @@ export function window<T>(windowBoundaries: Observable<any>) {
 		});
 }
 
+let index = 0;
 interval(100)
-	.pipe(window(interval(1000)))
+	.pipe(take(10))
+	.pipe(window(timer(300)))
 	.subscribe(v => {
-		logValue('value: ', v);
+		let obsIndex = index++;
+		v.subscribe(x => {
+			logValue('value: ', x, ' from: ', obsIndex);
+		});
 	});

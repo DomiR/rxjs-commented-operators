@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { finalize as finalizeOriginal } from 'rxjs/operators';
 
 export function finalize<T>(callback: () => void) {
 	return (source: Observable<T>) =>
@@ -37,15 +38,12 @@ export function finalize<T>(callback: () => void) {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
+of(1, 2, 3)
 	.pipe(
 		finalize(() => {
 			logValue('finally');
 		})
 	)
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

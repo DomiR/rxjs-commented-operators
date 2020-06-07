@@ -5,8 +5,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval } from 'rxjs';
+import { Observable, of, Subscription, timer, interval, range } from 'rxjs';
 import { logValue } from '../utils';
+import { bufferCount as bufferCountOriginal, take, tap } from 'rxjs/operators';
 
 export function bufferCount<T>(bufferSize: number, startBufferEvery: number = null) {
 	return (source: Observable<T>) =>
@@ -23,25 +24,27 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 					// in a very otimized manner, but we do
 					// not have to do so.
 					if (startBufferEvery != null) {
-						count += 1;
 						// If the start bufferEvery is set, we need to
 						// build up new a new buffer every time
 						// our count reaches that number by pushing
 						// an emtpy array to our buffer list.
-						if (count % startBufferEvery) {
+						if (count++ % startBufferEvery === 0) {
+							// console.debug('start buffer');
 							bufferList.push([]);
 						}
 
 						// Then we go through all buffers in buffer list and
 						// check if they have bufferSize items already.
 						// If so, we emit that buffer and remove from this list.
-						for (const buffer of bufferList) {
-							buffer.push(value);
-							if (buffer.length === bufferSize) {
-								observer.next(buffer);
-								bufferList.slice(bufferList.indexOf(buffer), 1);
+						const bufferListReversed = bufferList.reverse();
+						for (let i = bufferListReversed.length - 1; i >= 0; i--) {
+							bufferListReversed[i].push(value);
+							if (bufferListReversed[i].length === bufferSize) {
+								observer.next(bufferListReversed[i]);
+								bufferListReversed.splice(i, 1);
 							}
 						}
+						bufferList = bufferListReversed.reverse();
 					} else {
 						buffer.push(value);
 						if (buffer.length === bufferSize) {
@@ -56,7 +59,11 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 				},
 				() => {
 					logValue('source complete');
+					for (const buffer of bufferList) {
+						observer.next(buffer);
+					}
 					observer.complete();
+					// flush buffers
 				}
 			);
 
@@ -67,7 +74,7 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 		});
 }
 
-interval(500)
+range(0, 5)
 	.pipe(bufferCount(3, 2))
 	.subscribe(v => {
 		logValue('value: ', v);

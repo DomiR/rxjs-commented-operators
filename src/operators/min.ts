@@ -10,8 +10,9 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { min as minOriginal } from 'rxjs/operators';
 
-export function last<T>(comparer?: (a: T, b: T) => number) {
+export function min<T>(comparer?: (a: T, b: T) => number) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
 			let minValue = null;
@@ -67,8 +68,8 @@ export function last<T>(comparer?: (a: T, b: T) => number) {
 		});
 }
 
-interval(500)
-	.pipe(take(5), last())
+of(1, 2, 3)
+	.pipe(min())
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

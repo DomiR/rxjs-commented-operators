@@ -11,6 +11,7 @@ import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
+import { debounceTime as debounceTimeOriginal } from 'rxjs/operators';
 
 export function debounceTime<T>(duration: number) {
 	return (source: Observable<T>) =>
@@ -57,7 +58,7 @@ export function debounceTime<T>(duration: number) {
 }
 
 interval(500)
-	.pipe(debounceTime(1000))
+	.pipe(take(5), debounceTime(1000))
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval, from } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { logValue } from '../utils';
+import { concatMap as concatMapOriginal } from 'rxjs/operators';
 
 export function concatMap<T, O>(project: (value: T, index: number) => O) {
 	return (source: Observable<T>) =>

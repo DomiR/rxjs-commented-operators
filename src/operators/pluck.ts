@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { isArray } from 'util';
+import { pluck as pluckOriginal } from 'rxjs/operators';
 
 export function pluck<T, R>(...properties: string[]) {
 	return (source: Observable<T>) => {
@@ -34,7 +35,7 @@ export function pluck<T, R>(...properties: string[]) {
 	};
 }
 
-interval(100)
+of({ prop: 1, what: 2 }, { prop: 2, what: 2 }, { prop: 3, what: 2 })
 	.pipe(pluck('prop'))
 	.subscribe(v => {
 		logValue('value: ', v);

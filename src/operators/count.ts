@@ -10,8 +10,9 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { count as countOriginal } from 'rxjs/operators';
 
-export function last<T>(predicate?: (value: T, index: number, source: Observable<T>) => boolean) {
+export function count<T>(predicate?: (value: T, index: number, source: Observable<T>) => boolean) {
 	return (source: Observable<T>) =>
 		new Observable<number>(observer => {
 			let count = 0;
@@ -63,7 +64,7 @@ export function last<T>(predicate?: (value: T, index: number, source: Observable
 }
 
 interval(500)
-	.pipe(take(5), last())
+	.pipe(take(5), count())
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

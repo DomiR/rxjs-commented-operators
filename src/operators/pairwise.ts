@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { pairwise as pairwiseOriginal } from 'rxjs/operators';
 
 export function pairwise<T>() {
 	return (source: Observable<T>) =>
@@ -34,8 +35,8 @@ export function pairwise<T>() {
 		});
 }
 
-interval(100)
-	.pipe(take(10), pairwise())
+of(1, 2, 3)
+	.pipe(pairwise())
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

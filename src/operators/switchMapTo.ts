@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { switchMapTo as switchMapToOriginal } from 'rxjs/operators';
 
 export function switchMapTo<T, O extends Observable<any>>(innerObservable: any) {
 	return (source: Observable<T>) =>

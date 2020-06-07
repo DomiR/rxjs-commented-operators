@@ -9,9 +9,10 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, exhaust, map } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
+import { exhaust as exhaustOriginal } from 'rxjs/operators';
 
-export function every<V, T extends Observable<V>>() {
+export function exhaust<V, T extends Observable<V>>() {
 	return (source: Observable<T>) =>
 		new Observable<V>(observer => {
 			let runningSubscription: Subscription = null;
@@ -55,14 +56,9 @@ export function every<V, T extends Observable<V>>() {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(
-		take(5),
-		map(i => interval(1000))
-	)
+of(1, 2, 3)
+	.pipe(map(i => of('what')))
 	.pipe(exhaust())
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

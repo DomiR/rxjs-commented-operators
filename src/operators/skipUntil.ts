@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
 import { take, skip } from 'rxjs/operators';
+import { skipUntil as skipUntilOriginal } from 'rxjs/operators';
 
 export function skipUntil<T>(notifier: Observable<any>) {
 	return (source: Observable<T>) =>

@@ -9,7 +9,7 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { endWith as endWithOriginal } from 'rxjs/operators';
 
 export function endWith<T>(...array: T[]) {
 	return (source: Observable<T>) =>
@@ -38,11 +38,8 @@ export function endWith<T>(...array: T[]) {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
+of(1, 2, 3)
 	.pipe(endWith(1000, 2000))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

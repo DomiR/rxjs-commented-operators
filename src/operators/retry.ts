@@ -5,9 +5,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval, Subscribable } from 'rxjs';
+import { empty, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, retry as retryOriginal } from 'rxjs/operators';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
 
 export function retry<T, R>(count: number = -1) {
 	return (source: Observable<T>) => {
@@ -37,8 +37,17 @@ export function retry<T, R>(count: number = -1) {
 	};
 }
 
-interval(100)
-	.pipe(take(5), retry(1))
+of(1, 2, 3)
+	.pipe(
+		map(v => {
+			if (v === 2) throw Error('what');
+			else return v;
+		})
+	)
+	.pipe(
+		retry(2),
+		catchError(e => empty())
+	)
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

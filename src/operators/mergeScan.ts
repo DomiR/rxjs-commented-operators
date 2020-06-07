@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { mergeScan as mergeScanOriginal } from 'rxjs/operators';
 
 export function mergeScan<T, R>(
 	accumulator: (acc: R, value: T, index: number) => any,
@@ -61,8 +62,8 @@ export function mergeScan<T, R>(
 		});
 }
 
-of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(mergeScan((sum, a) => sum + a, 0))
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+// of(of(1, 2, 3), of(1, 2, 3))
+// 	.pipe(mergeScanOriginal((sum, a) => sum + a, 0))
+// 	.subscribe(v => {
+// 		console.log('value: ', v);
+// 	});

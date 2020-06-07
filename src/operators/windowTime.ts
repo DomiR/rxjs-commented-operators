@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
 import { logValue } from '../utils';
+import { windowTime as windowTimeOriginal, take } from 'rxjs/operators';
 
 export function windowTime<T>(windowTimeSpan: number) {
 	return (source: Observable<T>) =>
@@ -44,8 +45,13 @@ export function windowTime<T>(windowTimeSpan: number) {
 		});
 }
 
-interval(500)
-	.pipe(windowTime(1000))
+let index = 0;
+interval(100)
+	.pipe(take(10))
+	.pipe(windowTime(500))
 	.subscribe(v => {
-		logValue('value: ', v);
+		let obsIndex = index++;
+		v.subscribe(x => {
+			logValue('value: ', x, ' from: ', obsIndex);
+		});
 	});

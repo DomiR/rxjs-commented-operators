@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { mergeMap as mergeMapOriginal, map } from 'rxjs/operators';
 
 export function mergeMap<T, O>(
 	project: (value: T, index: number) => O,
@@ -59,8 +60,8 @@ export function mergeMap<T, O>(
 		});
 }
 
-of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(mergeMap(v => v + 1))
+of(of(1, 2, 3), of(4, 5, 6))
+	.pipe(mergeMap((v: any) => v.pipe(map((x: any) => x + 1))))
 	.subscribe(v => {
 		console.log('value: ', v);
 	});

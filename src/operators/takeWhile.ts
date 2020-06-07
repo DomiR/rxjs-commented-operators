@@ -7,9 +7,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
+import { Observable, range, Subscription } from 'rxjs';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
+import { takeWhile as takeWhileOriginal } from 'rxjs/operators';
 
 export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 	return (source: Observable<T>) =>
@@ -41,11 +41,8 @@ export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
-	.pipe(takeWhile(v => v < 100000))
+range(1, 10)
+	.pipe(takeWhile(v => v < 5))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

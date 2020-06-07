@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { delay as delayOriginal } from 'rxjs/operators';
 
 export function delay<T, R>(delayValue: number) {
 	return (source: Observable<T>) =>
@@ -21,7 +22,7 @@ export function delay<T, R>(delayValue: number) {
 			function runTimer() {
 				if (buffer.length > 0) {
 					const v = buffer.shift();
-					setTimeout(() => {
+					timer = setTimeout(() => {
 						observer.next(v.value as T);
 						if (didComplete) {
 							observer.complete();
@@ -49,7 +50,7 @@ export function delay<T, R>(delayValue: number) {
 				() => {
 					logValue('source complete');
 					didComplete = true;
-					if (buffer.length === 0) {
+					if (buffer.length === 0 && timer == null) {
 						observer.complete();
 					}
 				}

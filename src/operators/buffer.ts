@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
+import { buffer as bufferOriginal, take } from 'rxjs/operators';
 
 export function buffer<T, U>(closingNotifier: Observable<U>) {
 	return (source: Observable<T>) =>
@@ -50,8 +51,8 @@ export function buffer<T, U>(closingNotifier: Observable<U>) {
 		});
 }
 
-interval(500)
-	.pipe(buffer(timer(500)))
+interval(100)
+	.pipe(take(5), buffer(timer(500)))
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

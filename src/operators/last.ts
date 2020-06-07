@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { last as lastOriginal } from 'rxjs/operators';
 
 export function last<T>(
 	predicate?: (value: T, index: number, source: Observable<T>) => boolean,
@@ -76,8 +77,8 @@ export function last<T>(
 		});
 }
 
-interval(500)
-	.pipe(take(5), last())
+of(1, 2, 3)
+	.pipe(last())
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

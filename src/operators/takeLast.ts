@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, range } from 'rxjs';
 import { logValue } from '../utils';
+import { takeLast as takeLastOriginal } from 'rxjs/operators';
 
 export function takeLast<T>(count: number) {
 	return (source: Observable<T>) =>

@@ -11,6 +11,8 @@ import { Observable, of, Subscription, timer, interval, empty, VirtualTimeSchedu
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
+import { take as takeOriginal } from 'rxjs/operators';
+
 interface ThrottleConfig {
 	leading?: boolean;
 	trailing?: boolean;

@@ -5,9 +5,10 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval, Subscribable, Subject } from 'rxjs';
+import { Observable, of, Subscription, timer, interval, Subscribable, Subject, empty } from 'rxjs';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
+import { take, map, retry, catchError } from 'rxjs/operators';
+import { retryWhen as retryWhenOriginal } from 'rxjs/operators';
 
 export function retryWhen<T>(notifier: (notifications: Observable<any>) => Observable<any>) {
 	return (source: Observable<T>) => {
@@ -47,10 +48,16 @@ export function retryWhen<T>(notifier: (notifications: Observable<any>) => Obser
 	};
 }
 
-interval(100)
+of(1, 2, 3)
 	.pipe(
-		take(5),
-		retryWhen(notifications => notifications)
+		map(v => {
+			if (v === 2) throw Error('what');
+			else return v;
+		})
+	)
+	.pipe(
+		retryWhen(notification => notification.pipe(take(2))),
+		catchError(e => empty())
 	)
 	.subscribe(v => {
 		logValue('value: ', v);

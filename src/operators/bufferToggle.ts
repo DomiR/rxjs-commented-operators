@@ -8,14 +8,14 @@ import { fromEvent, EMPTY } from 'rxjs';
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
-import { bufferToggle } from 'rxjs/operators';
+import { bufferToggle as bufferToggleOriginal, take } from 'rxjs/operators';
 
 interface Context<T> {
 	subscription: Subscription;
 	buffer: T[];
 }
 
-export function bufferCount<T, O>(
+export function bufferToggle<T, O>(
 	openings: Observable<O>,
 	closingSelector: (value: O) => Observable<any>
 ) {
@@ -84,7 +84,10 @@ export function bufferCount<T, O>(
 }
 
 interval(500)
-	.pipe(bufferToggle(interval(500), v => timer(1000)))
+	.pipe(
+		take(5),
+		bufferToggle(interval(500), v => timer(1000))
+	)
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

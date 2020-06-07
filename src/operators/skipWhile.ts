@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { skipWhile as skipWhileOriginal } from 'rxjs/operators';
 
 export function skipWhile<T>(predicate: (value: T, index: number) => boolean) {
 	return (source: Observable<T>) =>
@@ -46,7 +47,7 @@ const currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
 interval(1000)
 	.pipe(take(5))
-	.pipe(skipWhile(v => v < 100000))
+	.pipe(skipWhile(v => v < 2))
 	.subscribe(v => {
 		logValue('value: ', v, ' at: ', Date.now() - currentTime);
 	});

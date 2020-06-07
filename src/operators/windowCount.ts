@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
 import { logValue } from '../utils';
+import { windowCount as windowCountOriginal, take } from 'rxjs/operators';
 
 export function windowCount<T>(bufferSize: number, startBufferEvery: number = null) {
 	return (source: Observable<T>) =>
@@ -64,8 +65,13 @@ export function windowCount<T>(bufferSize: number, startBufferEvery: number = nu
 		});
 }
 
-interval(500)
+let index = 0;
+interval(100)
+	.pipe(take(10))
 	.pipe(windowCount(3, 2))
 	.subscribe(v => {
-		logValue('value: ', v);
+		let obsIndex = index++;
+		v.subscribe(x => {
+			logValue('value: ', x, ' from: ', obsIndex);
+		});
 	});

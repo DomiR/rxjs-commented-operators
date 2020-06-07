@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { logValue } from '../utils';
+import { catchError as catchErrorOriginal } from 'rxjs/operators';
 
 export function catchError<T>(selector: (err: any, caught?: Observable<T>) => any) {
 	return (source: Observable<T>) =>

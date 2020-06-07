@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { distinctUntilChanged as distinctUntilChangedOriginal } from 'rxjs/operators';
 
 export function distinctUntilChanged<T, K>(
 	compare?: (x: K, y: K) => boolean,
@@ -22,8 +23,8 @@ export function distinctUntilChanged<T, K>(
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
-					const key: any = keySelector(value) ?? value;
-					if (compare?.(key as any, lastKey as any) ?? key === lastKey) {
+					const key: any = keySelector != null ? keySelector(value) : value;
+					if (compare != null ? !compare(key as any, lastKey as any) : key !== lastKey) {
 						observer.next(value);
 						lastKey = key;
 					}
@@ -43,11 +44,9 @@ export function distinctUntilChanged<T, K>(
 			});
 		});
 }
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
+of(1, 1, 2, 3)
 	.pipe(take(5))
 	.pipe(distinctUntilChanged())
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

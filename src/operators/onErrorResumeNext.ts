@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { isArray } from 'util';
+import { onErrorResumeNext as onErrorResumeNextOriginal, map } from 'rxjs/operators';
 
 export function onErrorResumeNext<T, R>(...nextSources: any[]) {
 	return (source: Observable<T>) => {
@@ -40,7 +41,13 @@ export function onErrorResumeNext<T, R>(...nextSources: any[]) {
 	};
 }
 
-interval(100)
+of(1, 2, 3)
+	.pipe(
+		map(v => {
+			if (v === 2) throw Error('what');
+			else return v;
+		})
+	)
 	.pipe(onErrorResumeNext(of(1, 2, 3)))
 	.subscribe(v => {
 		logValue('value: ', v);

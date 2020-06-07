@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction } from 'rxjs';
+import { mapTo as mapToOriginal } from 'rxjs/operators';
 
 export function mapTo<T, R>(mapValue: R): OperatorFunction<T, R> {
 	return (source: Observable<T>) =>

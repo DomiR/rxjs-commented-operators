@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
+import { withLatestFrom as withLatestFromOriginal, take } from 'rxjs/operators';
 
 export function withLatestFrom<T, R>(...args: any[]) {
 	return (source: Observable<T>) =>
@@ -52,8 +53,9 @@ export function withLatestFrom<T, R>(...args: any[]) {
 }
 
 interval(100)
+	.pipe(take(10))
 	.pipe(
-		withLatestFrom(v => {
+		withLatestFromOriginal(v => {
 			console.log('tapped value', v);
 		})
 	)

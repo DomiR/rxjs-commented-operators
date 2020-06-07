@@ -9,7 +9,7 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take, map } from 'rxjs/operators';
+import { find as findOriginal } from 'rxjs/operators';
 
 export function find<T>(predicate: (value: T, index?: number, source?: Observable<T>) => boolean) {
 	return (source: Observable<T>) =>
@@ -44,11 +44,8 @@ export function find<T>(predicate: (value: T, index?: number, source?: Observabl
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
-	.pipe(find(i => i < 10000))
+of(1, 2, 1000, 3)
+	.pipe(find(i => i > 100))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

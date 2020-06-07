@@ -7,6 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
 import { logValue } from '../utils';
+import { windowWhen as windowWhenOriginal, take } from 'rxjs/operators';
 
 export function windowWhen<T>(closingSelector: () => Observable<any>) {
 	return (source: Observable<T>) =>
@@ -50,8 +51,13 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 		});
 }
 
-interval(500)
-	.pipe(windowWhen(() => interval(1000)))
+let index = 0;
+interval(100)
+	.pipe(take(10))
+	.pipe(windowWhenOriginal(() => interval(950)))
 	.subscribe(v => {
-		logValue('value: ', v);
+		let obsIndex = index++;
+		v.subscribe(x => {
+			logValue('value: ', x, ' from: ', obsIndex);
+		});
 	});

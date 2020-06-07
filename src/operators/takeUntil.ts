@@ -10,6 +10,7 @@
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
 import { take, skip } from 'rxjs/operators';
+import { takeUntil as takeUntilOriginal } from 'rxjs/operators';
 
 export function takeUntil<T>(notifier: Observable<any>) {
 	return (source: Observable<T>) =>
@@ -46,7 +47,6 @@ export function takeUntil<T>(notifier: Observable<any>) {
 }
 
 const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
 interval(1000)
 	.pipe(take(5))
 	.pipe(takeUntil(timer(2000)))

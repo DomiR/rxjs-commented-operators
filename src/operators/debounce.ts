@@ -11,6 +11,7 @@ import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
+import { debounce as debounceOriginal } from 'rxjs/operators';
 
 export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 	return (source: Observable<T>) =>
@@ -24,9 +25,9 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 			// the filter operator here.
 			const sourceSubscription = source.subscribe(
 				value => {
+					console.debug('source with: ', value);
 					debouncedValue = value;
 					if (durationSubscription == null) {
-						console.debug('debounce with: ', value);
 						const durationObservable = durationSelector(value);
 						durationSubscription = durationObservable.subscribe(
 							v => {
@@ -37,7 +38,7 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 							},
 							err => {},
 							() => {
-								observer.next(debouncedValue);
+								// observer.next(debouncedValue);
 								debouncedValue = null;
 								durationSubscription = null;
 							}
@@ -68,7 +69,10 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 }
 
 interval(500)
-	.pipe(debounce(v => timer(v * 1000)))
+	.pipe(
+		take(5),
+		debounceOriginal(v => timer(v * 1000))
+	)
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

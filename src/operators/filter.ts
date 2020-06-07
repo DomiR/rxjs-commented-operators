@@ -9,7 +9,7 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
+import { filter as filterOriginal } from 'rxjs/operators';
 
 export function filter<T>(predicate: (value: T, index: number) => boolean) {
 	return (source: Observable<T>) =>
@@ -39,11 +39,8 @@ export function filter<T>(predicate: (value: T, index: number) => boolean) {
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
-	.pipe(filter(v => v < 100000))
+of(1, 2, 1000, 3)
+	.pipe(filter(v => v < 100))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});

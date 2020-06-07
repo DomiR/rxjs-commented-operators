@@ -6,6 +6,7 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
+import { switchAll as switchAllOriginal } from 'rxjs/operators';
 
 export function switchAll<T>() {
 	return (source: Observable<Observable<T>>) =>

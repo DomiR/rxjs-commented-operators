@@ -8,6 +8,7 @@
 import { Observable, of, Subscription, timer, interval, Subscribable, Subject } from 'rxjs';
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
+import { sample as sampleOriginal } from 'rxjs/operators';
 
 export function sample<T>(notifier: Observable<any>) {
 	return (source: Observable<T>) => {
@@ -43,7 +44,7 @@ export function sample<T>(notifier: Observable<any>) {
 }
 
 interval(100)
-	.pipe(take(5), sample(interval(1000)))
+	.pipe(take(5), sampleOriginal(interval(900)))
 	.subscribe(v => {
 		logValue('value: ', v);
 	});

@@ -9,7 +9,7 @@
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
 import { logValue } from '../utils';
-import { take } from 'rxjs/operators';
+import { every as everyOriginal } from 'rxjs/operators';
 
 export function every<T>(predicate: (value: T, index: number, source: Observable<T>) => boolean) {
 	return (source: Observable<T>) =>
@@ -40,11 +40,8 @@ export function every<T>(predicate: (value: T, index: number, source: Observable
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
-	.pipe(take(5))
-	.pipe(every(v => v < 100000))
+of(1, 2, 3)
+	.pipe(everyOriginal(v => v < 100000))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		logValue('value: ', v);
 	});
