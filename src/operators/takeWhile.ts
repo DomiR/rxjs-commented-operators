@@ -15,14 +15,15 @@ export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 	return (source: Observable<T>) =>
 		new Observable<T>(observer => {
 			let index = 0;
-			const sourceSubscription = source.subscribe(
+			let sourceSubscription: Subscription;
+			sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
 					if (predicate(value, index++)) {
 						observer.next(value);
 					} else {
 						observer.complete();
-						sourceSubscription.unsubscribe();
+						sourceSubscription?.unsubscribe();
 					}
 				},
 				err => {
@@ -42,7 +43,25 @@ export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 }
 
 range(1, 10)
-	.pipe(takeWhile(v => v < 5))
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.pipe(takeWhileOriginal(v => v < 5))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+
+			range(1, 10)
+				.pipe(takeWhile(v => v < 5))
+				.subscribe(
+					v => {
+						logValue('value: ', v);
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

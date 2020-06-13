@@ -19,8 +19,8 @@ export function sampleTime<T>(period: number) {
 				value => {
 					lastValue = value;
 				},
-				observer.error,
-				observer.complete
+				err => observer.error(),
+				() => observer.complete()
 			);
 
 			const interval = setInterval(() => {
@@ -40,7 +40,18 @@ export function sampleTime<T>(period: number) {
 }
 
 interval(100)
-	.pipe(take(5), sampleTimeOriginal(1000))
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.pipe(take(5), sampleTimeOriginal(400))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('====');
+			interval(100)
+				.pipe(take(5), sampleTime(400))
+				.subscribe(v => {
+					logValue('value: ', v);
+				});
+		}
+	);

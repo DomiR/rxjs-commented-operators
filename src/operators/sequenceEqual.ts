@@ -11,7 +11,7 @@ import { sequenceEqual as sequenceEqualOriginal } from 'rxjs/operators';
 
 export function sequenceEqual<T>(
 	compareTo: Observable<T>,
-	comparator: (a: T, b: T) => boolean = (a, b) => a !== b
+	comparator: (a: T, b: T) => boolean = (a, b) => a === b
 ) {
 	return (source: Observable<T>) => {
 		return new Observable<boolean>(observer => {
@@ -69,7 +69,18 @@ export function sequenceEqual<T>(
 }
 
 of(1, 2, 3)
-	.pipe(sequenceEqual(of(1, 2, 3)))
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.pipe(sequenceEqualOriginal(of(1, 2, 3)))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+			of(1, 2, 3)
+				.pipe(sequenceEqual(of(1, 2, 3)))
+				.subscribe(v => {
+					logValue('value: ', v);
+				});
+		}
+	);

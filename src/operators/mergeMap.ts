@@ -7,8 +7,9 @@
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
 import { mergeMap as mergeMapOriginal, map } from 'rxjs/operators';
+import { log } from 'console';
 
-export function mergeMap<T, O>(
+export function mergeMap<T, O extends Observable<any>>(
 	project: (value: T, index: number) => O,
 	concurrent: number = Number.POSITIVE_INFINITY
 ) {
@@ -19,21 +20,28 @@ export function mergeMap<T, O>(
 			let index = 0;
 
 			function subscribeToNextBufferElement() {
-				if (subscriptions.length > concurrent && buffer.length > 0) {
+				if (subscriptions.length < concurrent && buffer.length > 0) {
 					// the value we got is an observable itself so we subscribe to it
-					const obs = buffer.shift();
-					const sub = obs.subscribe(
+					const value = buffer.shift();
+					const obs = project(value, index++);
+					let sub: Subscription;
+					sub = obs.subscribe(
 						v => {
-							const mappedValue = project(v, index++);
-							observer.next(mappedValue);
+							observer.next(v);
 						},
 						err => {},
 						() => {
-							subscriptions.splice(subscriptions.indexOf(sub), 1);
+							console.log('inner complete');
+							if (sub) {
+								subscriptions.splice(subscriptions.indexOf(sub), 1);
+							}
+							console.log('subscriptions', subscriptions.length);
 							subscribeToNextBufferElement();
 						}
 					);
-					subscriptions.push(sub);
+					if (sub && !sub.closed) {
+						subscriptions.push(sub);
+					}
 				}
 			}
 
@@ -61,7 +69,23 @@ export function mergeMap<T, O>(
 }
 
 of(of(1, 2, 3), of(4, 5, 6))
-	.pipe(mergeMap((v: any) => v.pipe(map((x: any) => x + 1))))
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+	.pipe(mergeMapOriginal((v: any) => v.pipe(map((x: any) => x + 1))))
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.log('====');
+			of(of(1, 2, 3), of(4, 5, 6))
+				.pipe(
+					mergeMap((v: any) => {
+						console.debug('merging: ', v);
+						return v.pipe(map((x: any) => x + 1));
+					})
+				)
+				.subscribe(v => {
+					console.log('value: ', v);
+				});
+		}
+	);

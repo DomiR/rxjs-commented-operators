@@ -18,13 +18,13 @@ export function switchMap<T, O extends Observable<any>>(project: (value: T, inde
 					innerSubscription?.unsubscribe();
 					const innerObservable = project(value, index++);
 					innerSubscription = innerObservable.subscribe(
-						observer.next,
-						observer.error,
-						observer.complete
+						v => observer.next(v),
+						err => observer.error(err),
+						() => {}
 					);
 				},
-				observer.error,
-				observer.complete
+				err => observer.error(err),
+				() => observer.complete()
 			);
 
 			// return subscription, which will
@@ -36,7 +36,23 @@ export function switchMap<T, O extends Observable<any>>(project: (value: T, inde
 }
 
 of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(switchMap(v => of(1, 1, 1)))
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+	.pipe(switchMapOriginal(v => of(1, 1, 1)))
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+
+			of(of(1, 2, 3), of(1, 2, 3))
+				.pipe(switchMap(v => of(1, 1, 1)))
+				.subscribe(
+					v => {
+						console.log('value: ', v);
+					},
+					null,
+					() => {}
+				);
+		}
+	);

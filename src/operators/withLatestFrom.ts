@@ -54,11 +54,25 @@ export function withLatestFrom<T, R>(...args: any[]) {
 
 interval(100)
 	.pipe(take(10))
-	.pipe(
-		withLatestFromOriginal(v => {
-			console.log('tapped value', v);
-		})
-	)
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.pipe(withLatestFromOriginal(interval(300)))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+			interval(100)
+				.pipe(take(10))
+				.pipe(withLatestFrom(interval(300)))
+				.subscribe(
+					v => {
+						logValue('value: ', v);
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

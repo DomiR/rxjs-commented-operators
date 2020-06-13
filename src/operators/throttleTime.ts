@@ -11,7 +11,7 @@ import { Observable, of, Subscription, timer, interval, empty, VirtualTimeSchedu
 import { logValue } from '../utils';
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
-import { take as takeOriginal } from 'rxjs/operators';
+import { throttleTime as throttleTimeOriginal } from 'rxjs/operators';
 
 interface ThrottleConfig {
 	leading?: boolean;
@@ -64,11 +64,30 @@ export function throttleTime<T>(
 		});
 }
 
-const currentTime = Date.now();
+let currentTime = Date.now();
 console.log('start', Date.now() - currentTime);
-interval(1000)
+interval(100)
 	.pipe(take(5))
-	.pipe(throttleTime(100))
-	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
-	});
+	.pipe(throttleTimeOriginal(50))
+	.subscribe(
+		v => {
+			logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		},
+		null,
+		() => {
+			console.log('=====');
+			currentTime = Date.now();
+			interval(100)
+				.pipe(take(5))
+				.pipe(throttleTime(50))
+				.subscribe(
+					v => {
+						logValue('value: ', v, ' at: ', Date.now() - currentTime);
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

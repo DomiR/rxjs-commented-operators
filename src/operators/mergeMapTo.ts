@@ -22,7 +22,8 @@ export function mergeMapTo<T, O extends Observable<any>>(
 				if (subscriptions.length < concurrent && buffer.length > 0) {
 					// the value we got is an observable itself so we subscribe to it
 					const obs = buffer.shift();
-					const sub = innerObservable.subscribe(
+					let sub: Subscription;
+					sub = innerObservable.subscribe(
 						v => {
 							observer.next(v);
 						},
@@ -32,7 +33,9 @@ export function mergeMapTo<T, O extends Observable<any>>(
 							subscribeToNextBufferElement();
 						}
 					);
-					subscriptions.push(sub);
+					if (sub && !sub.closed) {
+						subscriptions.push(sub);
+					}
 				}
 			}
 
@@ -61,7 +64,18 @@ export function mergeMapTo<T, O extends Observable<any>>(
 }
 
 of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(mergeMapTo(of(1, 1, 1)))
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+	.pipe(mergeMapToOriginal(of(1, 1, 1)))
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+			of(of(1, 2, 3), of(1, 2, 3))
+				.pipe(mergeMapTo(of(1, 1, 1)))
+				.subscribe(v => {
+					console.log('value: ', v);
+				});
+		}
+	);

@@ -15,12 +15,12 @@ export function retry<T, R>(count: number = -1) {
 			let sourceSubscription: Subscription;
 			let countLeft = count;
 			function resubscribeIfNotDone(err) {
-				if (countLeft > 0) {
+				if (countLeft >= 0) {
 					countLeft--;
 					sourceSubscription = source.subscribe(
-						observer.next,
+						v => observer.next(v),
 						err => resubscribeIfNotDone(err),
-						observer.complete
+						() => observer.complete()
 					);
 				} else {
 					observer.error(err);
@@ -31,7 +31,7 @@ export function retry<T, R>(count: number = -1) {
 
 			// return subscription, which will unsubscribe from inner observable
 			return new Subscription(() => {
-				sourceSubscription.unsubscribe();
+				console.log('unsubscribe');
 			});
 		});
 	};
@@ -45,9 +45,35 @@ of(1, 2, 3)
 		})
 	)
 	.pipe(
-		retry(2),
+		retryOriginal(2),
 		catchError(e => empty())
 	)
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+			of(1, 2, 3)
+				.pipe(
+					map(v => {
+						if (v === 2) throw Error('what');
+						else return v;
+					})
+				)
+				.pipe(
+					retry(2),
+					catchError(e => empty())
+				)
+				.subscribe(
+					v => {
+						logValue('value: ', v);
+					},
+					null,
+					() => {
+						logValue('complete');
+					}
+				);
+		}
+	);

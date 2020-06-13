@@ -48,10 +48,26 @@ export function windowTime<T>(windowTimeSpan: number) {
 let index = 0;
 interval(100)
 	.pipe(take(10))
-	.pipe(windowTime(500))
-	.subscribe(v => {
-		let obsIndex = index++;
-		v.subscribe(x => {
-			logValue('value: ', x, ' from: ', obsIndex);
-		});
-	});
+	.pipe(windowTimeOriginal(500))
+	.subscribe(
+		v => {
+			let obsIndex = index++;
+			v.subscribe(x => {
+				logValue('value: ', x, ' from: ', obsIndex);
+			});
+		},
+		null,
+		() => {
+			console.log('=====');
+			index = 0;
+			interval(100)
+				.pipe(take(10))
+				.pipe(windowTime(500))
+				.subscribe(v => {
+					let obsIndex = index++;
+					v.subscribe(x => {
+						logValue('value: ', x, ' from: ', obsIndex);
+					});
+				});
+		}
+	);

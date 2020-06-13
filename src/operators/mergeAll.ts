@@ -11,11 +11,11 @@ import { mergeAll as mergeAllOriginal } from 'rxjs/operators';
 export function mergeAll<T>(concurrent: number = Number.POSITIVE_INFINITY) {
 	return (source: Observable<Observable<T>>) =>
 		new Observable<T>(observer => {
-			let buffer = [];
-			let subscriptions = [];
+			let buffer: Observable<any>[] = [];
+			let subscriptions: Subscription[] = [];
 
 			function subscribeToNextBufferElement() {
-				if (subscriptions.length > concurrent && buffer.length > 0) {
+				if (subscriptions.length < concurrent && buffer.length > 0) {
 					// the value we got is an observable itself so we subscribe to it
 					const obs = buffer.shift();
 					const sub = obs.subscribe(

@@ -23,11 +23,11 @@ export function onErrorResumeNext<T, R>(...nextSources: any[]) {
 				}
 				const nextSource = nextSourceList.shift();
 				sourceSubscription = nextSource.subscribe(
-					observer.next,
+					v => observer.next(v),
 					err => {
 						subscribeToNext(err);
 					},
-					observer.complete
+					() => observer.complete()
 				);
 			}
 
@@ -48,7 +48,25 @@ of(1, 2, 3)
 			else return v;
 		})
 	)
-	.pipe(onErrorResumeNext(of(1, 2, 3)))
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+	.pipe(onErrorResumeNextOriginal(of(1, 2, 3)))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('====');
+
+			of(1, 2, 3)
+				.pipe(
+					map(v => {
+						if (v === 2) throw Error('what');
+						else return v;
+					})
+				)
+				.pipe(onErrorResumeNext(of(1, 2, 3)))
+				.subscribe(v => {
+					logValue('value: ', v);
+				});
+		}
+	);

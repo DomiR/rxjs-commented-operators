@@ -22,21 +22,23 @@ export function windowCount<T>(bufferSize: number, startBufferEvery: number = nu
 					logValue('source value: ', value);
 
 					if (startBufferEvery != null) {
-						count += 1;
-
-						if (count % startBufferEvery) {
+						if (count % startBufferEvery === 0) {
 							const subject = new Subject<T>();
 							bufferList.push({ count: 0, subject });
 							observer.next(subject);
 						}
 
-						for (const buffer of bufferList) {
+						const bufferListReverse = bufferList.reverse();
+						for (let i = bufferList.length - 1; i >= 0; i--) {
+							const buffer = bufferListReverse[i];
 							buffer.subject.next(value);
 							buffer.count++;
+							const reverseIdx = bufferList.length - i;
 							if (buffer.count === bufferSize) {
-								bufferList.slice(bufferList.indexOf(buffer), 1);
+								bufferList.splice(reverseIdx, 1);
 							}
 						}
+						count += 1;
 					} else {
 						windowSubject.next(value);
 						windowCount++;
@@ -68,10 +70,32 @@ export function windowCount<T>(bufferSize: number, startBufferEvery: number = nu
 let index = 0;
 interval(100)
 	.pipe(take(10))
-	.pipe(windowCount(3, 2))
-	.subscribe(v => {
-		let obsIndex = index++;
-		v.subscribe(x => {
-			logValue('value: ', x, ' from: ', obsIndex);
-		});
-	});
+	.pipe(windowCountOriginal(3, 2))
+	.subscribe(
+		v => {
+			let obsIndex = index++;
+			v.subscribe(x => {
+				logValue('value: ', x, ' from: ', obsIndex);
+			});
+		},
+		null,
+		() => {
+			console.log('=====');
+			index = 0;
+			interval(100)
+				.pipe(take(10))
+				.pipe(windowCount(3, 2))
+				.subscribe(
+					v => {
+						let obsIndex = index++;
+						v.subscribe(x => {
+							logValue('value: ', x, ' from: ', obsIndex);
+						});
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

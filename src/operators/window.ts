@@ -16,10 +16,15 @@ export function window<T>(windowBoundaries: Observable<any>) {
 			observer.next(currentWindowSubject);
 			const sourceSubscription = source.subscribe(
 				value => {
+					logValue('source value: ', value);
 					currentWindowSubject.next(value);
 				},
-				observer.error,
+				err => {
+					logValue('source error', err);
+					observer.error(err);
+				},
 				() => {
+					logValue('source close');
 					currentWindowSubject.complete();
 					observer.complete();
 				}
@@ -27,6 +32,7 @@ export function window<T>(windowBoundaries: Observable<any>) {
 
 			const bounderySubscription = windowBoundaries.subscribe(
 				v => {
+					logValue('boundary value');
 					currentWindowSubject.complete();
 					currentWindowSubject = new Subject<T>();
 					observer.next(currentWindowSubject);
@@ -46,10 +52,32 @@ export function window<T>(windowBoundaries: Observable<any>) {
 let index = 0;
 interval(100)
 	.pipe(take(10))
-	.pipe(window(timer(300)))
-	.subscribe(v => {
-		let obsIndex = index++;
-		v.subscribe(x => {
-			logValue('value: ', x, ' from: ', obsIndex);
-		});
-	});
+	.pipe(windowOriginal(interval(300)))
+	.subscribe(
+		v => {
+			let obsIndex = index++;
+			v.subscribe(x => {
+				logValue('value: ', x, ' from: ', obsIndex);
+			});
+		},
+		null,
+		() => {
+			console.log('=====');
+			index = 0;
+			interval(100)
+				.pipe(take(10))
+				.pipe(window(interval(300)))
+				.subscribe(
+					v => {
+						let obsIndex = index++;
+						v.subscribe(x => {
+							logValue('value: ', x, ' from: ', obsIndex);
+						});
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

@@ -8,7 +8,7 @@ import { fromEvent, EMPTY } from 'rxjs';
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
 import { logValue } from '../utils';
-import { bufferToggle as bufferToggleOriginal, take } from 'rxjs/operators';
+import { bufferToggle as bufferToggleOriginal, take, tap } from 'rxjs/operators';
 
 interface Context<T> {
 	subscription: Subscription;
@@ -63,6 +63,10 @@ export function bufferToggle<T, O>(
 				},
 				() => {
 					logValue('source complete');
+					for (const context of contexts) {
+						context.subscription.unsubscribe();
+						observer.next(context.buffer);
+					}
 					observer.complete();
 				}
 			);
@@ -74,7 +78,9 @@ export function bufferToggle<T, O>(
 				// We also need to unsubscribe from the openings
 				openingSubscription?.unsubscribe();
 
-				// All contexts need to be closed and we emit the outstanding buffers
+				// All contexts need to be closed
+				// TODO: and we emit the outstanding buffers??? probably not
+
 				for (const context of contexts) {
 					context.subscription.unsubscribe();
 					observer.next(context.buffer);
@@ -83,10 +89,10 @@ export function bufferToggle<T, O>(
 		});
 }
 
-interval(500)
+interval(100)
 	.pipe(
 		take(5),
-		bufferToggle(interval(500), v => timer(1000))
+		bufferToggle(interval(160), v => timer(200))
 	)
 	.subscribe(v => {
 		logValue('value: ', v);

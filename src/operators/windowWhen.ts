@@ -15,6 +15,18 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 			let windowSubject: Subject<T> = null;
 			let closingSubscription: Subscription;
 
+			function subscribeToClosingObservable() {
+				const closingObservable = closingSelector();
+				closingSubscription = closingObservable.subscribe(() => {
+					console.debug('closing now');
+					// Emit buffer, then reset it whenever the closing Observable emits a value
+					windowSubject?.complete();
+					windowSubject = null;
+					subscribeToClosingObservable();
+				});
+			}
+			subscribeToClosingObservable();
+
 			const sourceSubscription = source.subscribe(
 				value => {
 					logValue('source value: ', value);
@@ -23,12 +35,6 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 						windowSubject = new Subject();
 						observer.next(windowSubject);
 						windowSubject.next(value);
-						const closingObservable = closingSelector();
-						closingSubscription = closingObservable.subscribe(() => {
-							// Emit buffer, then reset it whenever the closing Observable emits a value
-							windowSubject.complete();
-							windowSubject = null;
-						});
 					} else {
 						windowSubject.next(value);
 					}
@@ -54,10 +60,42 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 let index = 0;
 interval(100)
 	.pipe(take(10))
-	.pipe(windowWhenOriginal(() => interval(950)))
-	.subscribe(v => {
-		let obsIndex = index++;
-		v.subscribe(x => {
-			logValue('value: ', x, ' from: ', obsIndex);
-		});
-	});
+	.pipe(
+		windowWhenOriginal(() => {
+			console.debug('closing selection');
+			return timer(950);
+		})
+	)
+	.subscribe(
+		v => {
+			let obsIndex = index++;
+			v.subscribe(x => {
+				logValue('value: ', x, ' from: ', obsIndex);
+			});
+		},
+		null,
+		() => {
+			console.log('=====');
+			index = 0;
+			interval(100)
+				.pipe(take(10))
+				.pipe(
+					windowWhen(() => {
+						console.debug('closing selection');
+						return timer(950);
+					})
+				)
+				.subscribe(
+					v => {
+						let obsIndex = index++;
+						v.subscribe(x => {
+							logValue('value: ', x, ' from: ', obsIndex);
+						});
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

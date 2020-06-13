@@ -22,7 +22,7 @@ export function skipWhile<T>(predicate: (value: T, index: number) => boolean) {
 					logValue('source value: ', value);
 					if (!isSkipping) {
 						observer.next(value);
-					} else if (predicate(value, index++)) {
+					} else if (!predicate(value, index++)) {
 						isSkipping = false;
 						observer.next(value);
 					}
@@ -44,10 +44,32 @@ export function skipWhile<T>(predicate: (value: T, index: number) => boolean) {
 }
 
 const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
+interval(100)
 	.pipe(take(5))
-	.pipe(skipWhile(v => v < 2))
-	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
-	});
+	.pipe(skipWhileOriginal(v => v < 2))
+	.subscribe(
+		v => {
+			logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		},
+		null,
+		() => {
+			console.log('=====');
+			interval(100)
+				.pipe(take(5))
+				.pipe(
+					skipWhile(v => {
+						// console.log('skip while: ', v);
+						return v < 2;
+					})
+				)
+				.subscribe(
+					v => {
+						logValue('value: ', v, ' at: ', Date.now() - currentTime);
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

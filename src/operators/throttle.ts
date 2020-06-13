@@ -65,11 +65,29 @@ export function throttle<T>(
 		});
 }
 
-const currentTime = Date.now();
-console.log('start', Date.now() - currentTime);
-interval(1000)
+let currentTime = Date.now();
+interval(100)
 	.pipe(take(5))
-	.pipe(throttleOriginal(v => timer(100)))
-	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
-	});
+	.pipe(throttleOriginal(v => timer(50)))
+	.subscribe(
+		v => {
+			logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		},
+		null,
+		() => {
+			console.log('=====');
+			currentTime = Date.now();
+			interval(100)
+				.pipe(take(5))
+				.pipe(throttleOriginal(v => timer(50)))
+				.subscribe(
+					v => {
+						logValue('value: ', v, ' at: ', Date.now() - currentTime);
+					},
+					null,
+					() => {
+						console.log('=====');
+					}
+				);
+		}
+	);

@@ -20,7 +20,7 @@ export function exhaustMap<T, R, O extends Observable<R>>(project: (value: T, in
 			let index = 0;
 			const sourceSubscription = source.subscribe(
 				value => {
-					if (runningSubscription == null) {
+					if (runningSubscription == null || runningSubscription.closed) {
 						const innerObservable = project(value, index);
 						runningSubscription = innerObservable.subscribe(
 							v => {

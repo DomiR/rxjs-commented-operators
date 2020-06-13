@@ -18,6 +18,7 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 		new Observable<T>(observer => {
 			let debouncedValue: T;
 			let durationSubscription: Subscription;
+			let shouldComplete = false;
 
 			// We subscribe to the source observable as we usuually do.
 			// As the operator has a predicate argument we apply it
@@ -27,23 +28,27 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 				value => {
 					console.debug('source with: ', value);
 					debouncedValue = value;
-					if (durationSubscription == null) {
-						const durationObservable = durationSelector(value);
-						durationSubscription = durationObservable.subscribe(
-							v => {
-								observer.next(debouncedValue);
-								debouncedValue = null;
-								durationSubscription.unsubscribe();
-								durationSubscription = null;
-							},
-							err => {},
-							() => {
-								// observer.next(debouncedValue);
-								debouncedValue = null;
-								durationSubscription = null;
-							}
-						);
+					if (durationSubscription != null) {
+						durationSubscription.unsubscribe();
 					}
+					const durationObservable = durationSelector(value);
+					durationSubscription = durationObservable.subscribe(
+						v => {
+							observer.next(debouncedValue);
+							debouncedValue = null;
+							durationSubscription.unsubscribe();
+							durationSubscription = null;
+						},
+						err => {},
+						() => {
+							// observer.next(debouncedValue);
+							debouncedValue = null;
+							durationSubscription = null;
+							if (shouldComplete) {
+								observer.complete();
+							}
+						}
+					);
 				},
 				err => {
 					logValue('source err: ', err);
@@ -54,7 +59,11 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 
 					// As soon as our source closes we
 					// next the current count value.
-					observer.complete();
+					if (durationSubscription) {
+						shouldComplete = true;
+					} else {
+						observer.complete();
+					}
 				}
 			);
 
@@ -71,7 +80,10 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 interval(500)
 	.pipe(
 		take(5),
-		debounceOriginal(v => timer(v * 1000))
+		debounceOriginal(v => {
+			console.debug('debounce', 1000);
+			return timer(1000);
+		})
 	)
 	.subscribe(v => {
 		logValue('value: ', v);

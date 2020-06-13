@@ -17,13 +17,13 @@ export function switchMapTo<T, O extends Observable<any>>(innerObservable: any) 
 				value => {
 					innerSubscription?.unsubscribe();
 					innerSubscription = innerObservable.subscribe(
-						observer.next,
-						observer.error,
-						observer.complete
+						v => observer.next(v),
+						err => observer.error(err),
+						() => {}
 					);
 				},
-				observer.error,
-				observer.complete
+				err => observer.error(err),
+				() => observer.complete()
 			);
 
 			// return subscription, which will
@@ -35,7 +35,23 @@ export function switchMapTo<T, O extends Observable<any>>(innerObservable: any) 
 }
 
 of(of(1, 2, 3), of(1, 2, 3))
-	.pipe(switchMapTo(of(1, 1, 1)))
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+	.pipe(switchMapToOriginal(of(1, 1, 1)))
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+
+			of(of(1, 2, 3), of(1, 2, 3))
+				.pipe(switchMapTo(of(1, 1, 1)))
+				.subscribe(
+					v => {
+						console.log('value: ', v);
+					},
+					null,
+					() => {}
+				);
+		}
+	);

@@ -8,7 +8,6 @@
 import { interval, Observable, SchedulerLike, Subscription, of } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
 import { logValue } from '../utils';
-import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
 import { timeoutWith as timeoutWithOriginal } from 'rxjs/operators';
 
 export function timeoutWith<T>(due: number, withObservable: any, scheduler: SchedulerLike = async) {
@@ -18,22 +17,28 @@ export function timeoutWith<T>(due: number, withObservable: any, scheduler: Sche
 			let sourceSubscription: Subscription;
 			function resetTimer() {
 				clearTimeout(timeOut);
-				setTimeout(() => {
-					observer.error('did timeout');
+				timeOut = setTimeout(() => {
 					sourceSubscription.unsubscribe();
 					sourceSubscription = withObservable.subscribe(observer);
-				}, due as number);
+				}, due);
 			}
 
 			resetTimer();
 
 			sourceSubscription = source.subscribe(
 				value => {
+					logValue('source value: ', value);
 					resetTimer();
 					observer.next(value);
 				},
-				observer.error,
-				observer.complete
+				err => {
+					logValue('source err: ', err);
+					observer.error(err);
+				},
+				() => {
+					logValue('source complete');
+					observer.complete();
+				}
 			);
 
 			// return subscription, which will unsubscribe from inner observable
@@ -43,8 +48,24 @@ export function timeoutWith<T>(due: number, withObservable: any, scheduler: Sche
 		});
 }
 
-interval(1000)
-	.pipe(timeoutWith(900, of('nice')))
-	.subscribe(v => {
-		logValue('value: ', v);
-	});
+interval(100)
+	.pipe(timeoutWithOriginal(90, of('nice')))
+	.subscribe(
+		v => {
+			logValue('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+
+			interval(100)
+				.pipe(timeoutWith(90, of('nice')))
+				.subscribe(
+					v => {
+						logValue('value: ', v);
+					},
+					null,
+					() => {}
+				);
+		}
+	);

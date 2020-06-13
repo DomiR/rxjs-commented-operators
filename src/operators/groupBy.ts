@@ -5,16 +5,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, Subject, GroupedObservable, OperatorFunction } from 'rxjs';
-import {
-	groupBy as groupByOriginal,
-	mergeAll,
-	mergeMap,
-	concatAll,
-	combineAll,
-	toArray,
-	map,
-} from 'rxjs/operators';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { groupBy as groupByOriginal, map, mergeAll } from 'rxjs/operators';
+import { logValue } from '../utils';
 
 export function groupBy<T, K, R>(
 	keySelector: (value: T) => K,
@@ -23,10 +16,11 @@ export function groupBy<T, K, R>(
 	subjectSelector: () => Subject<R> = () => new Subject()
 ): any {
 	return (source: Observable<T>) =>
-		new Observable<K>(observer => {
+		new Observable<Subject<R>>(observer => {
 			const groupMap = new Map<K, Subject<R>>();
 			const subscription = source.subscribe(
 				value => {
+					logValue('source value: ', value);
 					const key = keySelector(value);
 					const val = elementSelector(value);
 
@@ -50,13 +44,16 @@ export function groupBy<T, K, R>(
 							});
 							subscription.add(durationSubscription);
 						}
+						observer.next(subject);
 						subject.next(val);
 					}
 				},
 				err => {
+					logValue('source err: ', err);
 					observer.error(err);
 				},
 				() => {
+					logValue('source complete');
 					for (const [key, subj] of groupMap.entries()) {
 						subj.complete();
 					}
@@ -76,10 +73,25 @@ export function groupBy<T, K, R>(
 
 of(1, 2, 2, 3)
 	.pipe(
-		groupBy(v => v),
+		groupByOriginal(v => v),
 		map((v: any, i) => v.pipe(map(v => ({ group: i, value: v })))),
 		mergeAll()
 	)
-	.subscribe(v => {
-		console.log('value: ', v);
-	});
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.debug('=====');
+			of(1, 2, 2, 3)
+				.pipe(
+					groupBy(v => v),
+					map((v: any, i) => v.pipe(map(v => ({ group: i, value: v })))),
+					mergeAll()
+				)
+				.subscribe(v => {
+					console.log('value: ', v);
+				});
+		}
+	);

@@ -5,24 +5,26 @@
 - [ ] Make playgrounds
 - [ ] Add general introduction
 - [ ] Make priority
-- [ ] Tell Ben Lesh about it and some more feedback
-- [ ] Comment out and tweet every day
+- [ ] Tell Ben Lesh about it and get some feedback
+- [ ] Add proper comments and tweet one every day
+
+# Operators
 
 - [x] [audit](https://rxjs-dev.firebaseapp.com/api/operators/audit)
 - [x] [auditTime](https://rxjs-dev.firebaseapp.com/api/operators/auditTime)
 - [x] [buffer](https://rxjs-dev.firebaseapp.com/api/operators/buffer)
 - [x] [bufferCount](https://rxjs-dev.firebaseapp.com/api/operators/bufferCount)
 - [x] [bufferTime](https://rxjs-dev.firebaseapp.com/api/operators/bufferTime)
-- [ ] [bufferToggle](https://rxjs-dev.firebaseapp.com/api/operators/bufferToggle)
-- [ ] [bufferWhen](https://rxjs-dev.firebaseapp.com/api/operators/bufferWhen)
+- [x] [bufferToggle](https://rxjs-dev.firebaseapp.com/api/operators/bufferToggle)
+- [x] [bufferWhen](https://rxjs-dev.firebaseapp.com/api/operators/bufferWhen)
 - [x] [catchError](https://rxjs-dev.firebaseapp.com/api/operators/catchError)
 - [x] [combineAll](https://rxjs-dev.firebaseapp.com/api/operators/combineAll)
 - [x] [concatAll](https://rxjs-dev.firebaseapp.com/api/operators/concatAll)
 - [x] [concatMap](https://rxjs-dev.firebaseapp.com/api/operators/concatMap)
 - [x] [concatMapTo](https://rxjs-dev.firebaseapp.com/api/operators/concatMapTo)
 - [x] [count](https://rxjs-dev.firebaseapp.com/api/operators/count)
-- [ ] [debounce](https://rxjs-dev.firebaseapp.com/api/operators/debounce)
-- [ ] [debounceTime](https://rxjs-dev.firebaseapp.com/api/operators/debounceTime)
+- [x] [debounce](https://rxjs-dev.firebaseapp.com/api/operators/debounce)
+- [x] [debounceTime](https://rxjs-dev.firebaseapp.com/api/operators/debounceTime)
 - [x] [defaultIfEmpty](https://rxjs-dev.firebaseapp.com/api/operators/defaultIfEmpty)
 - [x] [delay](https://rxjs-dev.firebaseapp.com/api/operators/delay)
 - [x] [delayWhen](https://rxjs-dev.firebaseapp.com/api/operators/delayWhen)
@@ -32,16 +34,16 @@
 - [x] [elementAt](https://rxjs-dev.firebaseapp.com/api/operators/elementAt)
 - [x] [endWith](https://rxjs-dev.firebaseapp.com/api/operators/endWith)
 - [x] [every](https://rxjs-dev.firebaseapp.com/api/operators/every)
-- [ ] [exhaust](https://rxjs-dev.firebaseapp.com/api/operators/exhaust)
-- [ ] [exhaustMap](https://rxjs-dev.firebaseapp.com/api/operators/exhaustMap)
-- [ ] [expand](https://rxjs-dev.firebaseapp.com/api/operators/expand)
+- [x] [exhaust](https://rxjs-dev.firebaseapp.com/api/operators/exhaust)
+- [x] [exhaustMap](https://rxjs-dev.firebaseapp.com/api/operators/exhaustMap)
+- [x] [expand](https://rxjs-dev.firebaseapp.com/api/operators/expand)
 - [x] [filter](https://rxjs-dev.firebaseapp.com/api/operators/filter)
 - [x] [finalize](https://rxjs-dev.firebaseapp.com/api/operators/finalize)
 - [x] [find](https://rxjs-dev.firebaseapp.com/api/operators/find)
 - [x] [findIndex](https://rxjs-dev.firebaseapp.com/api/operators/findIndex)
 - [x] [first](https://rxjs-dev.firebaseapp.com/api/operators/first)
 - [ ] flatMap => alias for mergeMap
-- [ ] [groupBy](https://rxjs-dev.firebaseapp.com/api/operators/groupBy)
+- [x] [groupBy](https://rxjs-dev.firebaseapp.com/api/operators/groupBy)
 - [x] [ignoreElements](https://rxjs-dev.firebaseapp.com/api/operators/ignoreElements)
 - [x] [isEmpty](https://rxjs-dev.firebaseapp.com/api/operators/isEmpty)
 - [x] [last](https://rxjs-dev.firebaseapp.com/api/operators/last)
@@ -50,16 +52,16 @@
 - [ ] materialize => notifications
 - [x] [max](https://rxjs-dev.firebaseapp.com/api/operators/max)
 - [x] [mergeAll](https://rxjs-dev.firebaseapp.com/api/operators/mergeAll)
-- [ ] [mergeMap](https://rxjs-dev.firebaseapp.com/api/operators/mergeMap)
-- [ ] [mergeMapTo](https://rxjs-dev.firebaseapp.com/api/operators/mergeMapTo)
-- [ ] [mergeScan](https://rxjs-dev.firebaseapp.com/api/operators/mergeScan)
+- [x] [mergeMap](https://rxjs-dev.firebaseapp.com/api/operators/mergeMap)
+- [x] [mergeMapTo](https://rxjs-dev.firebaseapp.com/api/operators/mergeMapTo)
+- [x] [mergeScan](https://rxjs-dev.firebaseapp.com/api/operators/mergeScan)
 - [x] [min](https://rxjs-dev.firebaseapp.com/api/operators/min)
 - [ ] multicast => map to a subject, so more subscribers can subscribe to this while internaly using one subscription only
 - [ ] observeOn => replace scheduler
-- [ ] [onErrorResumeNext](https://rxjs-dev.firebaseapp.com/api/operators/onErrorResumeNext)
+- [x] [onErrorResumeNext](https://rxjs-dev.firebaseapp.com/api/operators/onErrorResumeNext)
 - [x] [pairwise](https://rxjs-dev.firebaseapp.com/api/operators/pairwise)
 - [x] [pluck](https://rxjs-dev.firebaseapp.com/api/operators/pluck)
-- [ ] publish => map to ConnectableObservable
+- [ ] publish => map to connectable observable
 - [ ] publishBehavior => map to behaviour subject
 - [ ] publishLast => map to
 - [ ] publishReplay => map to replay subject
@@ -67,41 +69,41 @@
 - [ ] refCount => map to ConnectableObservable while counting refs
 - [x] [repeat](https://rxjs-dev.firebaseapp.com/api/operators/repeat)
 - [x] [repeatWhen](https://rxjs-dev.firebaseapp.com/api/operators/repeatWhen)
-- [ ] [retry](https://rxjs-dev.firebaseapp.com/api/operators/retry)
+- [x] [retry](https://rxjs-dev.firebaseapp.com/api/operators/retry)
 - [x] [retryWhen](https://rxjs-dev.firebaseapp.com/api/operators/retryWhen)
-- [ ] [sample](https://rxjs-dev.firebaseapp.com/api/operators/sample)
-- [ ] [sampleTime](https://rxjs-dev.firebaseapp.com/api/operators/sampleTime)
+- [x] [sample](https://rxjs-dev.firebaseapp.com/api/operators/sample)
+- [x] [sampleTime](https://rxjs-dev.firebaseapp.com/api/operators/sampleTime)
 - [x] [scan](https://rxjs-dev.firebaseapp.com/api/operators/scan)
-- [ ] [sequenceEqual](https://rxjs-dev.firebaseapp.com/api/operators/sequenceEqual)
-- [ ] share => map to Observable that multicasts
-- [ ] shareReplay => Observable that multicasts
+- [x] [sequenceEqual](https://rxjs-dev.firebaseapp.com/api/operators/sequenceEqual)
+- [ ] share => map to observable that multicasts
+- [ ] shareReplay => observable that multicasts
 - [x] [single](https://rxjs-dev.firebaseapp.com/api/operators/single)
-- [ ] [skip](https://rxjs-dev.firebaseapp.com/api/operators/skip)
+- [x] [skip](https://rxjs-dev.firebaseapp.com/api/operators/skip)
 - [x] [skipLast](https://rxjs-dev.firebaseapp.com/api/operators/skipLast)
 - [x] [skipUntil](https://rxjs-dev.firebaseapp.com/api/operators/skipUntil)
-- [ ] [skipWhile](https://rxjs-dev.firebaseapp.com/api/operators/skipWhile)
+- [x] [skipWhile](https://rxjs-dev.firebaseapp.com/api/operators/skipWhile)
 - [x] [startWith](https://rxjs-dev.firebaseapp.com/api/operators/startWith)
 - [ ] subscribeOn =>
-- [ ] [switchAll](https://rxjs-dev.firebaseapp.com/api/operators/switchAll)
-- [ ] [switchMap](https://rxjs-dev.firebaseapp.com/api/operators/switchMap)
-- [ ] [switchMapTo](https://rxjs-dev.firebaseapp.com/api/operators/switchMapTo)
+- [x] [switchAll](https://rxjs-dev.firebaseapp.com/api/operators/switchAll)
+- [x] [switchMap](https://rxjs-dev.firebaseapp.com/api/operators/switchMap)
+- [x] [switchMapTo](https://rxjs-dev.firebaseapp.com/api/operators/switchMapTo)
 - [x] [take](https://rxjs-dev.firebaseapp.com/api/operators/take)
 - [x] [takeLast](https://rxjs-dev.firebaseapp.com/api/operators/takeLast)
 - [x] [takeUntil](https://rxjs-dev.firebaseapp.com/api/operators/takeUntil)
-- [ ] [takeWhile](https://rxjs-dev.firebaseapp.com/api/operators/takeWhile)
+- [x] [takeWhile](https://rxjs-dev.firebaseapp.com/api/operators/takeWhile)
 - [x] [tap](https://rxjs-dev.firebaseapp.com/api/operators/tap)
-- [ ] [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle)
-- [ ] [throttleTime](https://rxjs-dev.firebaseapp.com/api/operators/throttleTime)
+- [x] [throttle](https://rxjs-dev.firebaseapp.com/api/operators/throttle)
+- [x] [throttleTime](https://rxjs-dev.firebaseapp.com/api/operators/throttleTime)
 - [x] [throwIfEmpty](https://rxjs-dev.firebaseapp.com/api/operators/throwIfEmpty)
 - [x] [timeInterval](https://rxjs-dev.firebaseapp.com/api/operators/timeInterval)
 - [x] [timeout](https://rxjs-dev.firebaseapp.com/api/operators/timeout)
-- [ ] [timeoutWith](https://rxjs-dev.firebaseapp.com/api/operators/timeoutWith)
+- [x] [timeoutWith](https://rxjs-dev.firebaseapp.com/api/operators/timeoutWith)
 - [x] [timestamp](https://rxjs-dev.firebaseapp.com/api/operators/timestamp)
 - [x] [toArray](https://rxjs-dev.firebaseapp.com/api/operators/toArray)
-- [ ] [window](https://rxjs-dev.firebaseapp.com/api/operators/window)
-- [ ] [windowCount](https://rxjs-dev.firebaseapp.com/api/operators/windowCount)
+- [x] [window](https://rxjs-dev.firebaseapp.com/api/operators/window)
+- [x] [windowCount](https://rxjs-dev.firebaseapp.com/api/operators/windowCount)
 - [x] [windowTime](https://rxjs-dev.firebaseapp.com/api/operators/windowTime)
-- [ ] [windowToggle](https://rxjs-dev.firebaseapp.com/api/operators/windowToggle)
-- [ ] [windowWhen](https://rxjs-dev.firebaseapp.com/api/operators/windowWhen)
-- [ ] [withLatestFrom](https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom)
+- [x] [windowToggle](https://rxjs-dev.firebaseapp.com/api/operators/windowToggle)
+- [x] [windowWhen](https://rxjs-dev.firebaseapp.com/api/operators/windowWhen)
+- [x] [withLatestFrom](https://rxjs-dev.firebaseapp.com/api/operators/withLatestFrom)
 - [x] [zipAll](https://rxjs-dev.firebaseapp.com/api/operators/zipAll)

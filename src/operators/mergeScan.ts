@@ -6,10 +6,11 @@
  */
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
-import { mergeScan as mergeScanOriginal } from 'rxjs/operators';
+import { mergeScan as mergeScanOriginal, map } from 'rxjs/operators';
+import { logValue } from '../utils';
 
 export function mergeScan<T, R>(
-	accumulator: (acc: R, value: T, index: number) => any,
+	accumulator: (acc: R, value: Observable<T>, index: number) => any,
 	seed: R,
 	concurrent: number = Number.POSITIVE_INFINITY
 ) {
@@ -19,35 +20,45 @@ export function mergeScan<T, R>(
 			let subscriptions = [];
 			let index = 0;
 			let accValue = seed;
+			let cachedValue = null;
 
 			function subscribeToNextBufferElement() {
-				if (subscriptions.length > concurrent && buffer.length > 0) {
+				if (subscriptions.length < concurrent && buffer.length > 0) {
 					// the value we got is an observable itself so we subscribe to it
 					const obs = buffer.shift();
-					const sub = obs.subscribe(
+					let sub: Subscription;
+					const mappedObserver = accumulator(accValue, obs, index++);
+					sub = mappedObserver.subscribe(
 						v => {
-							const mappedValue = accumulator(accValue, v, index++);
-							observer.next(mappedValue);
+							cachedValue = v;
+							observer.next(cachedValue);
 						},
 						err => {},
 						() => {
+							accValue = cachedValue ?? seed;
 							subscriptions.splice(subscriptions.indexOf(sub), 1);
 							subscribeToNextBufferElement();
 						}
 					);
-					subscriptions.push(sub);
+					if (sub && !sub.closed) {
+						subscriptions.push(sub);
+					}
 				}
 			}
 
 			const subscription = source.subscribe(
 				value => {
+					logValue('source value: ', value);
 					buffer.push(value);
+
 					subscribeToNextBufferElement();
 				},
 				err => {
+					logValue('source err: ', err);
 					observer.error(err);
 				},
 				() => {
+					logValue('source complete');
 					observer.complete();
 				}
 			);
@@ -62,8 +73,39 @@ export function mergeScan<T, R>(
 		});
 }
 
-// of(of(1, 2, 3), of(1, 2, 3))
-// 	.pipe(mergeScanOriginal((sum, a) => sum + a, 0))
-// 	.subscribe(v => {
-// 		console.log('value: ', v);
-// 	});
+of(of(1, 2, 3), of(1, 2, 3))
+	.pipe(
+		mergeScanOriginal((sum, a) => {
+			console.debug('scan sum', sum);
+			return a.pipe(
+				map(x => {
+					console.debug('scan x', sum, x);
+					return x + sum;
+				})
+			);
+		}, 0)
+	)
+	.subscribe(
+		v => {
+			console.log('value: ', v);
+		},
+		null,
+		() => {
+			console.log('=====');
+			of(of(1, 2, 3), of(1, 2, 3))
+				.pipe(
+					mergeScan((sum, a) => {
+						console.debug('scan sum', sum);
+						return a.pipe(
+							map(x => {
+								console.debug('scan x', sum, x);
+								return x + sum;
+							})
+						);
+					}, 0)
+				)
+				.subscribe(v => {
+					console.log('value: ', v);
+				});
+		}
+	);
