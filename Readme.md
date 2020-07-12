@@ -1,10 +1,10 @@
 ![Cover image](./cover.png)
 
-This shall be a gentle introduction of rxjs operators.
+This is a gentle introduction of [rxjs](https://rxjs-dev.firebaseapp.com/) operators.
 
-If you need a reminder and general introduction on operators and a first taste on how commented operators will look like [see here].
+If you need a refresher and/or a general introduction on operators and a first taste on what commented operators will look like [see here].
 
-Otherwise please dig into the operators
+Otherwise please dig into the operators.
 
 ## <sub>Operators</sub>
 
