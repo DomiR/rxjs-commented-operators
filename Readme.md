@@ -2,7 +2,7 @@
 
 This is a gentle introduction of [rxjs](https://rxjs-dev.firebaseapp.com/) operators.
 
-If you need a refresher and/or a general introduction on operators and a first taste on what commented operators will look like [see here].
+If you need a refresher and/or a general introduction on operators and a first taste on what commented operators will look like [see here](./Introduction.md).
 
 Otherwise please dig into the operators.
 
