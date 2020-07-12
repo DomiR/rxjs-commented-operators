@@ -17,7 +17,7 @@ Most of the time the original implementations will also let you interchange obse
 
 ### Basic operator
 
-A well-written guide for custom operators is already in the docs,
+A well-written guide for custom operators is already in the [docs](https://rxjs-dev.firebaseapp.com/guide/operators),
 but for completeness' sake I'll try to give my own explanation here so you may already get a sense of what
 commented operators look like.
 
