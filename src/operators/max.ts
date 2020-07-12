@@ -62,6 +62,7 @@ export function max<T>(comparer?: (a: T, b: T) => number) {
 			// inner observable in case the outer subscriber decides to
 			// unsubscribe.
 			return new Subscription(() => {
+				console.debug('unsubscribing');
 				sourceSubscription.unsubscribe();
 			});
 		});

@@ -19,11 +19,15 @@ export function tap<T>(cb: (value: T) => void) {
 					observer.next(value);
 				},
 				observer.error,
-				observer.complete
+				() => {
+					console.debug('souce complete');
+					observer.complete();
+				}
 			);
 
 			// return subscription, which will unsubscribe from inner observable
 			return new Subscription(() => {
+				console.debug('clean up');
 				sourceSubscription.unsubscribe();
 			});
 		});
