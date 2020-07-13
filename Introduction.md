@@ -3,7 +3,7 @@
 This guide is for the curious, but foremost for people who have at least some basic understanding of rxjs observables and want to get more into operators.
 
 These commented operators should provide you with an easy-to-follow guide into the code that makes up operators.
-They should also help you build your own operators more easily.
+They should also help you build your operators more easily.
 
 The original operator implementations use mechanisms that are more performant, but we don't care about performance here.
 Most of the time the original implementations will also let you interchange observables with promises, but we will only cover observables to make it simpler to understand.
@@ -18,10 +18,10 @@ Most of the time the original implementations will also let you interchange obse
 ### Basic operator
 
 A well-written guide for custom operators is already in the [docs](https://rxjs-dev.firebaseapp.com/guide/operators),
-but for completeness' sake I'll try to give my own explanation here so you may already get a sense of what
+but for completeness' sake, I'll try to give my explanation here so you may already get a sense of what
 commented operators look like.
 
-We will take a huge step back here and dismantle an operator and assemble it again step by step. The first step to writing your own operator is to provide a named function.
+We will take a huge step back here and dismantle an operator and assemble it again step by step. The first step to writing your operator is to provide a named function.
 
 ```js
 function myOperator() {...}
@@ -31,7 +31,7 @@ Our operator can be applied to any observable via the pipe function.
 If we have an observable via `from([a, b, c])` and apply our operator by using the pipe operation via `from([a, b, c]).pipe(myOperator())`,
 you may observe that we call our operator function to get a pristine instance of said operator.
 
-To illustrate this we could also store it in some variable really quick.
+To illustrate this we could also store it in some variable.
 
 ```js
 const myOperatorInstance = myOperator();
@@ -42,7 +42,7 @@ from([a, b, c]).pipe(myOperatorInstance);
 Although it is possible to reuse this instance, it is considered best practice to use a function to make sure that any used internal state is not being reused. Also, often you will want to pass some extra arguments to your operator `e.g. filter(x => x > 10)`.
 
 Now, to the value that we have to return when creating a new operator:
-Within our operator function we need to return another function, which takes a source observable as an argument. This source observable is the upstream observable or, in other words, it is the datastream that is piped into your operator.
+Within our operator function, we need to return another function, which takes a source observable as an argument. This source observable is the upstream observable or, in other words, it is the data stream that is piped into your operator.
 
 ```js
 // this example operator has no arguments
@@ -71,7 +71,7 @@ const exampleObservable = from([a, b, c]).pipe(myOperator());
 exampleObservable.subscribe(v => console.log(v));
 ```
 
-Although we totaly could, we should not subscribe directly upon operator creation because doing so would make the observable **hot**. Let's also look at a quick example here:
+Although we totally could, we should not subscribe directly upon operator creation because doing so would make the observable **hot**. Let's also look at a quick example here:
 Interval will give us an observable that counts from 0 every x milliseconds, where x is the argument.
 
 ```js
@@ -105,7 +105,7 @@ setTimeout(() => {
 }, 3000);
 ```
 
-Usually we do not want to destroy the observer principle, where
+Usually, we do not want to destroy the observer principle, where
 the whole chain is only set up when somebody subscribes at the end.
 
 This inner function therefore should rather return a cold observable, meaning an observable that no one has subscribed to yet. One way to do this is to just apply some other operators on our source observable and return something like: `sourceObservable.pipe(map(x => x * 2))` or `sourceObservable.pipe(tap(x => logValueToMyLoggingService(x)))`.
@@ -135,7 +135,7 @@ function myOperator() {
 }
 ```
 
-Within thia newly created observable we will subscribe only to the source observable,
+Within this newly created observable we will subscribe only to the source observable,
 when the newly created returned observable is subscribed to.
 
 ```js
@@ -209,7 +209,7 @@ Now for completeness' sake, we should also take a quick look at error handling.
 Although rxjs does a lot of the heavy lifting, we need to understand that you
 can call `.error` OR `.complete` only once. After that, you should not call `.next` again (rxjs will have an internal `closed` flag and will not pass along any other messages you try to send with `.next`, but you also should try to avoid sending more).
 
-Calling `.next()` (A) is basically calling either the value function of your subscriber (B) or that of the subscriber in the next observable (C):
+Calling `.next()` (A) is calling either the value function of your subscriber (B) or that of the subscriber in the next observable (C):
 
 ```js
 // (A) by calling this next function in your observable
