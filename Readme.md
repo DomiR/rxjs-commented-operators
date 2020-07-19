@@ -6,11 +6,13 @@ If you need a refresher and/or a general introduction on operators and a first t
 
 Otherwise please dig into the operators.
 
+**WARNING: DO NOT USE THEM INSTEAD OF THE ORIGINAL ONES**
+
 ## <sub>Operators</sub>
 
 **Easy**
 
-- [ ] catchError ([source](https://rxjs-dev.firebaseapp.com/api/operators/catchError))
+- [x] catchError ([source](https://rxjs-dev.firebaseapp.com/api/operators/catchError))
 - [ ] count ([source](https://rxjs-dev.firebaseapp.com/api/operators/count))
 - [ ] distinct ([source](https://rxjs-dev.firebaseapp.com/api/operators/distinct))
 - [ ] distinctUntilChanged ([source](https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilChanged))
