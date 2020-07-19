@@ -12,7 +12,7 @@ Otherwise please dig into the operators.
 
 **Easy**
 
-- [x] catchError ([source](https://rxjs-dev.firebaseapp.com/api/operators/catchError))
+- [x] catchError ([source](https://rxjs-dev.firebaseapp.com/api/operators/catchError), [playground](https://stackblitz.com/edit/rxjs-ypydct))
 - [ ] count ([source](https://rxjs-dev.firebaseapp.com/api/operators/count))
 - [ ] distinct ([source](https://rxjs-dev.firebaseapp.com/api/operators/distinct))
 - [ ] distinctUntilChanged ([source](https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilChanged))
