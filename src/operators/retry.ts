@@ -7,7 +7,6 @@
 
 import { empty, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, retry as retryOriginal } from 'rxjs/operators';
-import { logValue } from '../utils';
 
 export function retry<T, R>(count: number = -1) {
 	return (source: Observable<T>) => {
@@ -50,7 +49,7 @@ of(1, 2, 3)
 	)
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -68,11 +67,11 @@ of(1, 2, 3)
 				)
 				.subscribe(
 					v => {
-						logValue('value: ', v);
+						console.log('value: ', v);
 					},
 					null,
 					() => {
-						logValue('complete');
+						console.log('complete');
 					}
 				);
 		}

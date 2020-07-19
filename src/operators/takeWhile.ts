@@ -8,7 +8,7 @@
  */
 
 import { Observable, range, Subscription } from 'rxjs';
-import { logValue } from '../utils';
+
 import { takeWhile as takeWhileOriginal } from 'rxjs/operators';
 
 export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
@@ -18,7 +18,7 @@ export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 			let sourceSubscription: Subscription;
 			sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (predicate(value, index++)) {
 						observer.next(value);
 					} else {
@@ -27,11 +27,11 @@ export function takeWhile<T>(predicate: (value: T, index: number) => boolean) {
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -46,7 +46,7 @@ range(1, 10)
 	.pipe(takeWhileOriginal(v => v < 5))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -56,7 +56,7 @@ range(1, 10)
 				.pipe(takeWhile(v => v < 5))
 				.subscribe(
 					v => {
-						logValue('value: ', v);
+						console.log('value: ', v);
 					},
 					null,
 					() => {

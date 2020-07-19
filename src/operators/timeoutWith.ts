@@ -7,7 +7,7 @@
 
 import { interval, Observable, SchedulerLike, Subscription, of } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
-import { logValue } from '../utils';
+
 import { timeoutWith as timeoutWithOriginal } from 'rxjs/operators';
 
 export function timeoutWith<T>(due: number, withObservable: any, scheduler: SchedulerLike = async) {
@@ -27,16 +27,16 @@ export function timeoutWith<T>(due: number, withObservable: any, scheduler: Sche
 
 			sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					resetTimer();
 					observer.next(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -52,7 +52,7 @@ interval(100)
 	.pipe(timeoutWithOriginal(90, of('nice')))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -62,7 +62,7 @@ interval(100)
 				.pipe(timeoutWith(90, of('nice')))
 				.subscribe(
 					v => {
-						logValue('value: ', v);
+						console.log('value: ', v);
 					},
 					null,
 					() => {}

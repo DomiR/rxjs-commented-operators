@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { bufferWhen as bufferWhenOriginal, take, tap } from 'rxjs/operators';
 
 let now = Date.now();
@@ -42,7 +42,7 @@ export function bufferWhen<T>(closingSelector: () => Observable<any>) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (buffer == null) {
 						buffer = [value];
 					} else {
@@ -50,11 +50,11 @@ export function bufferWhen<T>(closingSelector: () => Observable<any>) {
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.next(buffer);
 					observer.complete();
 				}
@@ -74,7 +74,7 @@ interval(100)
 		bufferWhenOriginal(() => interval(160))
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});
 
 // interval(100)
@@ -94,7 +94,7 @@ interval(100)
 // 	)
 // 	.subscribe(
 // 		v => {
-// 			logValue('value: ', v);
+// 			console.log('value: ', v);
 // 		},
 // 		() => {},
 // 		() => {
@@ -118,7 +118,7 @@ interval(100)
 // 					)
 // 				)
 // 				.subscribe(v => {
-// 					logValue('value: ', v);
+// 					console.log('value: ', v);
 // 				});
 // 		}
 // 	);

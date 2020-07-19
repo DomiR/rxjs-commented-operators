@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { sequenceEqual as sequenceEqualOriginal } from 'rxjs/operators';
 
 export function sequenceEqual<T>(
@@ -72,7 +72,7 @@ of(1, 2, 3)
 	.pipe(sequenceEqualOriginal(of(1, 2, 3)))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -80,7 +80,7 @@ of(1, 2, 3)
 			of(1, 2, 3)
 				.pipe(sequenceEqual(of(1, 2, 3)))
 				.subscribe(v => {
-					logValue('value: ', v);
+					console.log('value: ', v);
 				});
 		}
 	);

@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { isArray } from 'util';
 import { reduce as reduceOriginal } from 'rxjs/operators';
 
@@ -40,5 +40,5 @@ export function reduce<T, R>(
 of(1, 2, 3)
 	.pipe(reduce((acc, val) => acc + val, 0))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

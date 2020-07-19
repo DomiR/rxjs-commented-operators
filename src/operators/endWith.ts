@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { endWith as endWithOriginal } from 'rxjs/operators';
 
 export function endWith<T>(...array: T[]) {
@@ -16,15 +16,15 @@ export function endWith<T>(...array: T[]) {
 		new Observable<T>(observer => {
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					observer.next(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					for (const lastValues of array) {
 						observer.next(lastValues);
 					}
@@ -41,5 +41,5 @@ export function endWith<T>(...array: T[]) {
 of(1, 2, 3)
 	.pipe(endWith(1000, 2000))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

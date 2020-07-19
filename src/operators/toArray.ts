@@ -6,7 +6,7 @@
  */
 
 import { interval, Observable, SchedulerLike, Subscription } from 'rxjs';
-import { logValue } from '../utils';
+
 import { toArray as toArrayOriginal, take } from 'rxjs/operators';
 
 export function toArray<T>() {
@@ -35,5 +35,5 @@ interval(100)
 	.pipe(take(5))
 	.pipe(toArray())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

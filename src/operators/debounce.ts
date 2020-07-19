@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
 import { debounce as debounceOriginal } from 'rxjs/operators';
@@ -51,11 +51,11 @@ export function debounce<T>(durationSelector: (value: T) => Observable<any>) {
 					);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					// As soon as our source closes we
 					// next the current count value.
@@ -86,5 +86,5 @@ interval(500)
 		})
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

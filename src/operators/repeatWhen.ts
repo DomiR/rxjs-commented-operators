@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subscribable, Subject } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { repeatWhen as repeatWhenOriginal } from 'rxjs/operators';
 
@@ -51,5 +51,5 @@ export function repeatWhen<T>(notifier: (notifications: Observable<any>) => Obse
 of(1, 2, 3)
 	.pipe(repeatWhen(notifications => notifications.pipe(take(1))))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

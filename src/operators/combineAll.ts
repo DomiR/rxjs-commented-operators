@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { combineAll as combineAllOriginal } from 'rxjs/operators';
 
 export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
@@ -17,15 +17,15 @@ export function combineAll<T, R>(project?: (...values: Array<any>) => R) {
 			const innerObservablesLastValues = [];
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					innerObservables.push(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					let active = innerObservables.length;
 
 					// If no inner observable was emitted, we complete instantly.

@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, skip } from 'rxjs/operators';
 import { takeUntil as takeUntilOriginal } from 'rxjs/operators';
 
@@ -17,15 +17,15 @@ export function takeUntil<T>(notifier: Observable<any>) {
 		new Observable<T>(observer => {
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					observer.next(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -51,5 +51,5 @@ interval(1000)
 	.pipe(take(5))
 	.pipe(takeUntil(timer(2000)))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		console.log('value: ', v, ' at: ', Date.now() - currentTime);
 	});

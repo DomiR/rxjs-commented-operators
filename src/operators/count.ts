@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { count as countOriginal } from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ export function count<T>(predicate?: (value: T, index: number, source: Observabl
 			// the filter operator here.
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					try {
 						// We increment the counter for every
 						// value. If a predicate function is
@@ -41,11 +41,11 @@ export function count<T>(predicate?: (value: T, index: number, source: Observabl
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					// As soon as our source closes we
 					// next the current count value.
@@ -66,5 +66,5 @@ export function count<T>(predicate?: (value: T, index: number, source: Observabl
 interval(500)
 	.pipe(take(5), count())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

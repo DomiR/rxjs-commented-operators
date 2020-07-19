@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { bufferTime as bufferTimeOriginal, take } from 'rxjs/operators';
 
 export function bufferTime<T>(bufferTimeSpan: number) {
@@ -25,16 +25,16 @@ export function bufferTime<T>(bufferTimeSpan: number) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					// We store our value in every buffer we currently have open
 					buffer.push(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (buffer.length > 0) {
 						observer.next(buffer);
 					}
@@ -53,5 +53,5 @@ export function bufferTime<T>(bufferTimeSpan: number) {
 interval(500)
 	.pipe(take(5), bufferTime(1000))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

@@ -7,7 +7,6 @@
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
 import { mergeScan as mergeScanOriginal, map } from 'rxjs/operators';
-import { logValue } from '../utils';
 
 export function mergeScan<T, R>(
 	accumulator: (acc: R, value: Observable<T>, index: number) => any,
@@ -48,17 +47,17 @@ export function mergeScan<T, R>(
 
 			const subscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					buffer.push(value);
 
 					subscribeToNextBufferElement();
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);

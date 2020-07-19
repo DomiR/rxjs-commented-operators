@@ -8,18 +8,6 @@
 import { timer, from } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 
-export function logValue(...value: any) {
-	console.log(...value);
-}
-
-export function logError(...value: any) {
-	console.log(...value);
-}
-
-export function logComplete(...value: any) {
-	console.log(...value);
-}
-
 export function ofTimer(...args: number[]) {
 	return from(args).pipe(mergeMap(v => timer(v).pipe(map(__ => v)), 1));
 }

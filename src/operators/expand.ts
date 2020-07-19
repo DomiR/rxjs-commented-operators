@@ -7,10 +7,9 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue, ofTimer, ofTimerAbsolute } from '../utils';
-import { take, map, delay, mapTo, tap } from 'rxjs/operators';
-import { expand as expandOriginal } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { delay, expand as expandOriginal, take } from 'rxjs/operators';
+import { ofTimerAbsolute } from '../utils';
 
 export function expand<V>(
 	project: (value: V, index: number) => Observable<V>,
@@ -44,17 +43,17 @@ export function expand<V>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					// logValue('source value: ', value);
+					// console.log('source value: ', value);
 					observer.next(value);
 					buffer.push(value);
 					subscribeToNextBufferElement();
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 				}
 			);
 
@@ -75,7 +74,7 @@ ofTimerAbsolute(100, 300, 400)
 	.pipe(take(10))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		err => {},
 		() => {
@@ -85,13 +84,13 @@ ofTimerAbsolute(100, 300, 400)
 				.pipe(take(10))
 				.subscribe(
 					v => {
-						logValue('value: ', v);
+						console.log('value: ', v);
 					}
 					// 	ofTimerAbsolute(100, 300, 400)
 					// 		.pipe(map(i => ofTimer(150, 50)))
 					// 		.pipe(expand())
 					// 		.subscribe(v => {
-					// 			logValue('value: ', v);
+					// 			console.log('value: ', v);
 					// 		});
 				);
 		}

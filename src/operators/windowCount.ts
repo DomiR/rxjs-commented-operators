@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
-import { logValue } from '../utils';
+
 import { windowCount as windowCountOriginal, take } from 'rxjs/operators';
 
 export function windowCount<T>(bufferSize: number, startBufferEvery: number = null) {
@@ -19,7 +19,7 @@ export function windowCount<T>(bufferSize: number, startBufferEvery: number = nu
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 
 					if (startBufferEvery != null) {
 						if (count % startBufferEvery === 0) {
@@ -51,11 +51,11 @@ export function windowCount<T>(bufferSize: number, startBufferEvery: number = nu
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -75,7 +75,7 @@ interval(100)
 		v => {
 			let obsIndex = index++;
 			v.subscribe(x => {
-				logValue('value: ', x, ' from: ', obsIndex);
+				console.log('value: ', x, ' from: ', obsIndex);
 			});
 		},
 		null,
@@ -89,7 +89,7 @@ interval(100)
 					v => {
 						let obsIndex = index++;
 						v.subscribe(x => {
-							logValue('value: ', x, ' from: ', obsIndex);
+							console.log('value: ', x, ' from: ', obsIndex);
 						});
 					},
 					null,

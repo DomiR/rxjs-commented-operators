@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subscribable } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { repeat as repeatOriginal } from 'rxjs/operators';
 
@@ -45,5 +45,5 @@ export function repeat<T, R>(count: number = -1) {
 of(1, 2, 3)
 	.pipe(repeat(2))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

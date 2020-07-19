@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { debounceTime as debounceTimeOriginal } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export function debounceTime<T>(duration: number) {
 			// the filter operator here.
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (durationTimer) {
 						clearTimeout(durationTimer);
 					}
@@ -35,11 +35,11 @@ export function debounceTime<T>(duration: number) {
 					}, duration);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					// As soon as our source closes we
 					// next the current count value.
@@ -65,7 +65,7 @@ interval(500)
 	.pipe(take(5), debounceTime(1000))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		}
 		// err => {},
 		// () => {
@@ -73,7 +73,7 @@ interval(500)
 		// 	interval(500)
 		// 		.pipe(take(5), debounceTime(1000))
 		// 		.subscribe(v => {
-		// 			logValue('value: ', v);
+		// 			console.log('value: ', v);
 		// 		});
 		// }
 	);

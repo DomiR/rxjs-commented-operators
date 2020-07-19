@@ -7,7 +7,6 @@
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
 import { mergeMapTo as mergeMapToOriginal } from 'rxjs/operators';
-import { logValue } from '../utils';
 
 export function mergeMapTo<T, O extends Observable<any>>(
 	innerObservable: O,
@@ -41,7 +40,7 @@ export function mergeMapTo<T, O extends Observable<any>>(
 
 			const subscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					buffer.push(value);
 					subscribeToNextBufferElement();
 				},

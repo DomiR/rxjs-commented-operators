@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { buffer as bufferOriginal, take } from 'rxjs/operators';
 
 export function buffer<T, U>(closingNotifier: Observable<U>) {
@@ -16,29 +16,29 @@ export function buffer<T, U>(closingNotifier: Observable<U>) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					buffer.push(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
 
 			const closingNotifierSubscription = closingNotifier.subscribe(
 				value => {
-					logValue('closingNotifier: ', value);
+					console.log('closingNotifier: ', value);
 					observer.next(buffer);
 				},
 				err => {
-					logValue('closingNotifier err: ', err);
+					console.log('closingNotifier err: ', err);
 				},
 				() => {
-					logValue('closingNotifier complete');
+					console.log('closingNotifier complete');
 					observer.complete();
 				}
 			);
@@ -54,5 +54,5 @@ export function buffer<T, U>(closingNotifier: Observable<U>) {
 interval(100)
 	.pipe(take(5), buffer(timer(500)))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

@@ -9,7 +9,7 @@
 
 import { interval, Observable, Subscription, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { logValue } from '../utils';
+
 import { exhaustMap as exhaustMapOriginal } from 'rxjs/operators';
 
 export function exhaustMap<T, R, O extends Observable<R>>(project: (value: T, index: number) => O) {
@@ -38,11 +38,11 @@ export function exhaustMap<T, R, O extends Observable<R>>(project: (value: T, in
 					index += 1;
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					// observer.complete();
 					didComplete = true;
 					if (runningSubscription == null) {
@@ -62,5 +62,5 @@ of(1, 2, 3)
 	.pipe(take(5))
 	.pipe(exhaustMap(i => of(`what: ${i}`)))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

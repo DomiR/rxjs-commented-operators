@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { audit as auditOriginal, take } from 'rxjs/operators';
 
 export function audit<T, U>(durationSelector: (value: T) => Observable<U>) {
@@ -75,5 +75,5 @@ interval(100)
 		take(5)
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

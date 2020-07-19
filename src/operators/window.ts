@@ -6,7 +6,7 @@
  */
 
 import { interval, Observable, Subscription, Subject, timer } from 'rxjs';
-import { logValue } from '../utils';
+
 import { window as windowOriginal, take } from 'rxjs/operators';
 
 export function window<T>(windowBoundaries: Observable<any>) {
@@ -16,15 +16,15 @@ export function window<T>(windowBoundaries: Observable<any>) {
 			observer.next(currentWindowSubject);
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					currentWindowSubject.next(value);
 				},
 				err => {
-					logValue('source error', err);
+					console.log('source error', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source close');
+					console.log('source close');
 					currentWindowSubject.complete();
 					observer.complete();
 				}
@@ -32,7 +32,7 @@ export function window<T>(windowBoundaries: Observable<any>) {
 
 			const bounderySubscription = windowBoundaries.subscribe(
 				v => {
-					logValue('boundary value');
+					console.log('boundary value');
 					currentWindowSubject.complete();
 					currentWindowSubject = new Subject<T>();
 					observer.next(currentWindowSubject);
@@ -57,7 +57,7 @@ interval(100)
 		v => {
 			let obsIndex = index++;
 			v.subscribe(x => {
-				logValue('value: ', x, ' from: ', obsIndex);
+				console.log('value: ', x, ' from: ', obsIndex);
 			});
 		},
 		null,
@@ -71,7 +71,7 @@ interval(100)
 					v => {
 						let obsIndex = index++;
 						v.subscribe(x => {
-							logValue('value: ', x, ' from: ', obsIndex);
+							console.log('value: ', x, ' from: ', obsIndex);
 						});
 					},
 					null,

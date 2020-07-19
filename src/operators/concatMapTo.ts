@@ -7,7 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, from } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { logValue } from '../utils';
+
 import { concatMapTo as concatMapToOriginal } from 'rxjs/operators';
 
 export function concatMapTo<T, O>(observable: O) {
@@ -24,15 +24,15 @@ export function concatMapTo<T, O>(observable: O) {
 					const nextInnerObservable = innerObservables.shift();
 					activeSubscription = nextInnerObservable.subscribe(
 						value => {
-							logValue('inner value: ', value);
+							console.log('inner value: ', value);
 							observer.next(value);
 						},
 						err => {
-							logValue('inner error: ', err);
+							console.log('inner error: ', err);
 							observer.error(err);
 						},
 						() => {
-							logValue('inner complete: ');
+							console.log('inner complete: ');
 							activeSubscription = null;
 							subscribeToNextInner();
 						}
@@ -42,16 +42,16 @@ export function concatMapTo<T, O>(observable: O) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					innerObservables.push(observable);
 					subscribeToNextInner();
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (activeSubscription == null && innerObservables.length == 0) {
 						observer.complete();
 					}

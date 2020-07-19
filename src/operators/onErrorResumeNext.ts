@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { isArray } from 'util';
 import { onErrorResumeNext as onErrorResumeNextOriginal, map } from 'rxjs/operators';
 
@@ -51,7 +51,7 @@ of(1, 2, 3)
 	.pipe(onErrorResumeNextOriginal(of(1, 2, 3)))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -66,7 +66,7 @@ of(1, 2, 3)
 				)
 				.pipe(onErrorResumeNext(of(1, 2, 3)))
 				.subscribe(v => {
-					logValue('value: ', v);
+					console.log('value: ', v);
 				});
 		}
 	);

@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, range } from 'rxjs';
-import { logValue } from '../utils';
+
 import { bufferCount as bufferCountOriginal, take, tap } from 'rxjs/operators';
 
 export function bufferCount<T>(bufferSize: number, startBufferEvery: number = null) {
@@ -18,7 +18,7 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 
 					// The original operator handles both cases
 					// in a very otimized manner, but we do
@@ -54,11 +54,11 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					for (const buffer of bufferList) {
 						observer.next(buffer);
 					}
@@ -77,5 +77,5 @@ export function bufferCount<T>(bufferSize: number, startBufferEvery: number = nu
 range(0, 5)
 	.pipe(bufferCount(3, 2))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

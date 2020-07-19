@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, map } from 'rxjs/operators';
 import { single as singleOriginal } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export function single<T>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (didComplete) {
 						observer.error();
 					} else {
@@ -34,11 +34,11 @@ export function single<T>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (!didComplete) {
 						observer.complete();
 					}
@@ -54,5 +54,5 @@ export function single<T>(
 of(1, 2, 1000, 3)
 	.pipe(single(i => i > 100))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

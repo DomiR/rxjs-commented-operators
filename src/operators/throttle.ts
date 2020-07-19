@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { ObserveOnSubscriber } from 'rxjs/internal/operators/observeOn';
 import { throttle as throttleOriginal } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export function throttle<T>(
 			let valueBuffer;
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (innerSubscription != null) {
 						// skip this value
 						valueBuffer = value;
@@ -49,11 +49,11 @@ export function throttle<T>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -71,7 +71,7 @@ interval(100)
 	.pipe(throttleOriginal(v => timer(50)))
 	.subscribe(
 		v => {
-			logValue('value: ', v, ' at: ', Date.now() - currentTime);
+			console.log('value: ', v, ' at: ', Date.now() - currentTime);
 		},
 		null,
 		() => {
@@ -82,7 +82,7 @@ interval(100)
 				.pipe(throttleOriginal(v => timer(50)))
 				.subscribe(
 					v => {
-						logValue('value: ', v, ' at: ', Date.now() - currentTime);
+						console.log('value: ', v, ' at: ', Date.now() - currentTime);
 					},
 					null,
 					() => {

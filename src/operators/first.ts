@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, map } from 'rxjs/operators';
 import { first as firstOriginal } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export function first<T>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (predicate == null || predicate(value, i++, source)) {
 						observer.next(value);
 						observer.complete();
@@ -30,11 +30,11 @@ export function first<T>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (shouldComplete) {
 						observer.complete();
 					}
@@ -50,5 +50,5 @@ export function first<T>(
 of(1, 2, 1000, 3)
 	.pipe(first(i => i > 100))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

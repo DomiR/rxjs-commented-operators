@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { withLatestFrom as withLatestFromOriginal, take } from 'rxjs/operators';
 
 export function withLatestFrom<T, R>(...args: any[]) {
@@ -57,7 +57,7 @@ interval(100)
 	.pipe(withLatestFromOriginal(interval(300)))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -67,7 +67,7 @@ interval(100)
 				.pipe(withLatestFrom(interval(300)))
 				.subscribe(
 					v => {
-						logValue('value: ', v);
+						console.log('value: ', v);
 					},
 					null,
 					() => {

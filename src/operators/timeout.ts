@@ -7,7 +7,7 @@
 
 import { interval, Observable, SchedulerLike, Subscription } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
-import { logValue } from '../utils';
+
 import { timeout as timeoutOriginal } from 'rxjs/operators';
 
 export function timeout<T>(due: number | Date, scheduler: SchedulerLike = async) {
@@ -54,9 +54,9 @@ interval(1000)
 	.pipe(timeout(900))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		err => {
-			logValue('expected timeout error');
+			console.log('expected timeout error');
 		}
 	);

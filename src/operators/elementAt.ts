@@ -8,7 +8,6 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
 
 export function elementAt<T>(index: number, defaultValue?: T) {
 	return (source: Observable<T>) =>
@@ -17,18 +16,18 @@ export function elementAt<T>(index: number, defaultValue?: T) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (index === i++) {
 						observer.next(value);
 						observer.complete();
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (i < index) {
 						observer.next(defaultValue);
 					}
@@ -45,5 +44,5 @@ export function elementAt<T>(index: number, defaultValue?: T) {
 of(1, 2, 3)
 	.pipe(elementAt(1))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

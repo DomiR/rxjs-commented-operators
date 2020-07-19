@@ -7,7 +7,7 @@
 
 import { interval, Observable, SchedulerLike, Subscription } from 'rxjs';
 import { async } from 'rxjs/internal/scheduler/async';
-import { logValue } from '../utils';
+
 import { timestamp as timestampOriginal, take } from 'rxjs/operators';
 
 export function timestamp<T>(scheduler: SchedulerLike = async) {
@@ -32,5 +32,5 @@ interval(100)
 	.pipe(take(5))
 	.pipe(timestamp())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

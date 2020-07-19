@@ -7,7 +7,6 @@
 
 import { Observable, of, Subject, Subscription } from 'rxjs';
 import { groupBy as groupByOriginal, map, mergeAll } from 'rxjs/operators';
-import { logValue } from '../utils';
 
 export function groupBy<T, K, R>(
 	keySelector: (value: T) => K,
@@ -20,7 +19,7 @@ export function groupBy<T, K, R>(
 			const groupMap = new Map<K, Subject<R>>();
 			const subscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					const key = keySelector(value);
 					const val = elementSelector(value);
 
@@ -49,11 +48,11 @@ export function groupBy<T, K, R>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					for (const [key, subj] of groupMap.entries()) {
 						subj.complete();
 					}

@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { delay as delayOriginal } from 'rxjs/operators';
 
@@ -35,7 +35,7 @@ export function delay<T, R>(delayValue: number) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					buffer.push({
 						value: value,
 						time: Date.now() + delayValue,
@@ -43,12 +43,12 @@ export function delay<T, R>(delayValue: number) {
 					runTimer();
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					clearTimeout(timer);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					didComplete = true;
 					if (buffer.length === 0 && timer == null) {
 						observer.complete();
@@ -68,5 +68,5 @@ interval(1000)
 	.pipe(take(5))
 	.pipe(delay(1000))
 	.subscribe(v => {
-		logValue('value: ', v, ' at: ', Date.now() - currentTime);
+		console.log('value: ', v, ' at: ', Date.now() - currentTime);
 	});

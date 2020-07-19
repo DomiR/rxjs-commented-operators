@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { max as maxOriginal } from 'rxjs/operators';
 
 export function max<T>(comparer?: (a: T, b: T) => number) {
@@ -22,7 +22,7 @@ export function max<T>(comparer?: (a: T, b: T) => number) {
 			// for later.
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					try {
 						maxValue =
 							maxValue == null
@@ -43,11 +43,11 @@ export function max<T>(comparer?: (a: T, b: T) => number) {
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					// As soon as our source dries up (aka closes) we
 					// check if we have any value and emit it.
@@ -71,5 +71,5 @@ export function max<T>(comparer?: (a: T, b: T) => number) {
 of(1, 2, 3)
 	.pipe(max())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

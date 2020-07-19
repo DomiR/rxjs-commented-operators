@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
-import { logValue } from '../utils';
+
 import { defaultIfEmpty as defaultIfEmptyOriginal } from 'rxjs/operators';
 
 export function defaultIfEmpty<T, R>(defaultValue: R = null) {
@@ -18,16 +18,16 @@ export function defaultIfEmpty<T, R>(defaultValue: R = null) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					isEmpty = false;
 					observer.next(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					if (isEmpty) {
 						observer.next(defaultValue);
@@ -45,5 +45,5 @@ export function defaultIfEmpty<T, R>(defaultValue: R = null) {
 empty()
 	.pipe(defaultIfEmpty(12))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

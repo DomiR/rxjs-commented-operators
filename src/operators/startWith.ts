@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { isArray } from 'util';
 import { startWith as startWithOriginal } from 'rxjs/operators';
 
@@ -32,5 +32,5 @@ export function startWith<T, R>(...array: any) {
 of(1, 2, 3)
 	.pipe(startWith(10))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

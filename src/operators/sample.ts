@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subscribable, Subject } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, finalize } from 'rxjs/operators';
 import { sample as sampleOriginal } from 'rxjs/operators';
 
@@ -59,13 +59,13 @@ interval(100)
 	.pipe(
 		take(5),
 		finalize(() => {
-			logValue('source closed');
+			console.log('source closed');
 		}),
 		sampleOriginal(interval(300))
 	)
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		null,
 		() => {
@@ -74,7 +74,7 @@ interval(100)
 			interval(100)
 				.pipe(take(5), sample(interval(300)))
 				.subscribe(v => {
-					logValue('value: ', v);
+					console.log('value: ', v);
 				});
 		}
 	);

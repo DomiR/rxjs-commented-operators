@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { find as findOriginal } from 'rxjs/operators';
 
 export function find<T>(predicate: (value: T, index?: number, source?: Observable<T>) => boolean) {
@@ -19,7 +19,7 @@ export function find<T>(predicate: (value: T, index?: number, source?: Observabl
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (predicate(value, i++, source)) {
 						observer.next(value);
 						observer.complete();
@@ -27,11 +27,11 @@ export function find<T>(predicate: (value: T, index?: number, source?: Observabl
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (shouldComplete) {
 						observer.complete();
 					}
@@ -47,5 +47,5 @@ export function find<T>(predicate: (value: T, index?: number, source?: Observabl
 of(1, 2, 1000, 3)
 	.pipe(find(i => i > 100))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

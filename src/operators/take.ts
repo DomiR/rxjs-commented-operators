@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take as takeOriginal } from 'rxjs/operators';
 
 export function take<T>(count: number) {
@@ -36,5 +36,5 @@ export function take<T>(count: number) {
 of(1, 2, 3)
 	.pipe(take(2))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

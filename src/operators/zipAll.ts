@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { delay } from 'rxjs/operators';
 import { zipAll as zipAllOriginal } from 'rxjs/operators';
 
@@ -69,5 +69,5 @@ export function zipAll<T>(project: (...values: any[]) => any = (...v) => v) {
 of(of(1, 2, 3), of(4, 5, 6, 7), of(8, 9, 10).pipe(delay(1000)))
 	.pipe(zipAll())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

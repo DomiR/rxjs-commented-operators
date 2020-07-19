@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
-import { logValue } from '../utils';
+
 import { windowWhen as windowWhenOriginal, take } from 'rxjs/operators';
 
 export function windowWhen<T>(closingSelector: () => Observable<any>) {
@@ -29,7 +29,7 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 
 					if (windowSubject == null) {
 						windowSubject = new Subject();
@@ -40,11 +40,11 @@ export function windowWhen<T>(closingSelector: () => Observable<any>) {
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -70,7 +70,7 @@ interval(100)
 		v => {
 			let obsIndex = index++;
 			v.subscribe(x => {
-				logValue('value: ', x, ' from: ', obsIndex);
+				console.log('value: ', x, ' from: ', obsIndex);
 			});
 		},
 		null,
@@ -89,7 +89,7 @@ interval(100)
 					v => {
 						let obsIndex = index++;
 						v.subscribe(x => {
-							logValue('value: ', x, ' from: ', obsIndex);
+							console.log('value: ', x, ' from: ', obsIndex);
 						});
 					},
 					null,

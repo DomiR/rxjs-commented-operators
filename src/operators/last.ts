@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { last as lastOriginal } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export function last<T>(
 			// the filter operator here.
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					try {
 						// If we do not pass a filter predicate we
 						// replace the lastValue wich each new
@@ -47,11 +47,11 @@ export function last<T>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 
 					// As soon as our source dries up (aka closes) we
 					// check if we have any value (that passed the filter,
@@ -80,5 +80,5 @@ export function last<T>(
 of(1, 2, 3)
 	.pipe(last())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

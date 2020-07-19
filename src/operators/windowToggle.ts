@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subject } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, tap } from 'rxjs/operators';
 import { windowToggle as windowToggleOriginal } from 'rxjs/operators';
 
@@ -20,24 +20,24 @@ export function windowToggle<T, O>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (windowSubject != null) {
 						windowSubject.next(value);
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
 			let closingSubscription: Subscription;
 			const openingSubscription = openings.subscribe(
 				openingValue => {
-					// logValue('openingValue value: ', openingValue);
+					// console.log('openingValue value: ', openingValue);
 					windowSubject = new Subject();
 					observer.next(windowSubject);
 					const closingObservable = closingSelector(openingValue);
@@ -87,7 +87,7 @@ interval(100)
 		v => {
 			let obsIndex = index++;
 			v.subscribe(x => {
-				logValue('value: ', x, ' from: ', obsIndex);
+				console.log('value: ', x, ' from: ', obsIndex);
 			});
 		},
 		null,
@@ -107,7 +107,7 @@ interval(100)
 						// console.debug('value: ', v);
 						let obsIndex = index++;
 						v.subscribe(x => {
-							logValue('value: ', x, ' from: ', obsIndex);
+							console.log('value: ', x, ' from: ', obsIndex);
 						});
 					},
 					null,

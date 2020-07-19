@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, map } from 'rxjs/operators';
 import { distinctUntilKeyChanged as distinctUntilKeyChangedOriginal } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export function distinctUntilKeyChanged<T, K extends keyof T>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					const keyValue: any = value[key];
 					if (compare != null ? !compare(keyValue as any, lastKey as any) : keyValue !== lastKey) {
 						observer.next(value);
@@ -30,11 +30,11 @@ export function distinctUntilKeyChanged<T, K extends keyof T>(
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -52,5 +52,5 @@ of(1, 1, 2, 3)
 	)
 	.pipe(distinctUntilKeyChanged('time'))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

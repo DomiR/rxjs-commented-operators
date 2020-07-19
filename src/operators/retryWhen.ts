@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, Subscribable, Subject, empty } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take, map, retry, catchError } from 'rxjs/operators';
 import { retryWhen as retryWhenOriginal } from 'rxjs/operators';
 
@@ -60,5 +60,5 @@ of(1, 2, 3)
 		catchError(e => empty())
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

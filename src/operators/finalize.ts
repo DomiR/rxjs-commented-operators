@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { finalize as finalizeOriginal } from 'rxjs/operators';
 
@@ -17,16 +17,16 @@ export function finalize<T>(callback: () => void) {
 		new Observable<T>(observer => {
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					observer.next(value);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					callback();
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					callback();
 					observer.complete();
 				}
@@ -41,9 +41,9 @@ export function finalize<T>(callback: () => void) {
 of(1, 2, 3)
 	.pipe(
 		finalize(() => {
-			logValue('finally');
+			console.log('finally');
 		})
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

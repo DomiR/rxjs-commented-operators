@@ -7,7 +7,6 @@
 
 import { Observable, of, Subscription, OperatorFunction, ObservableInput } from 'rxjs';
 import { switchAll as switchAllOriginal } from 'rxjs/operators';
-import { logValue } from '../utils';
 
 export function switchAll<T>() {
 	return (source: Observable<Observable<T>>) =>
@@ -15,7 +14,7 @@ export function switchAll<T>() {
 			let innerSubscription: Subscription;
 			const subscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					innerSubscription?.unsubscribe();
 					innerSubscription = value.subscribe(
 						v => observer.next(v),
@@ -24,11 +23,11 @@ export function switchAll<T>() {
 					);
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);

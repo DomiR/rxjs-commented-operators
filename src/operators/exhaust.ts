@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue, ofTimer, ofTimerAbsolute } from '../utils';
+import { ofTimer, ofTimerAbsolute } from '../utils';
 import { take, map } from 'rxjs/operators';
 import { exhaust as exhaustOriginal } from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ export function exhaust<V, T extends Observable<V>>() {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (runningSubscription == null || runningSubscription.closed) {
 						runningSubscription = value.subscribe(
 							v => {
@@ -37,11 +37,11 @@ export function exhaust<V, T extends Observable<V>>() {
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					didComplete = true;
 					if (runningSubscription == null) {
 						observer.complete();
@@ -61,7 +61,7 @@ ofTimerAbsolute(100, 300, 400)
 	.pipe(exhaustOriginal())
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		err => {},
 		() => {
@@ -70,7 +70,7 @@ ofTimerAbsolute(100, 300, 400)
 				.pipe(map(i => ofTimer(150, 50)))
 				.pipe(exhaust())
 				.subscribe(v => {
-					logValue('value: ', v);
+					console.log('value: ', v);
 				});
 		}
 	);

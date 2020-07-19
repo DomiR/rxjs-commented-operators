@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
-import { logValue } from '../utils';
+
 import { take } from 'rxjs/operators';
 import { distinct as distinctOriginal } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ export function distinct<T, K>(keySelector?: (value: T) => K, flushes?: Observab
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					const key = keySelector != null ? keySelector(value) : value;
 					if (!set.has(key)) {
 						set.add(key);
@@ -27,11 +27,11 @@ export function distinct<T, K>(keySelector?: (value: T) => K, flushes?: Observab
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.complete();
 				}
 			);
@@ -51,5 +51,5 @@ of(1, 1, 2, 3)
 	.pipe(take(5))
 	.pipe(distinct())
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

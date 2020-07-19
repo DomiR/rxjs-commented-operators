@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
-import { logValue } from '../utils';
+
 import { throwIfEmpty as throwIfEmptyOriginal } from 'rxjs/operators';
 
 export function throwIfEmpty<T>(errorFactory: () => any = () => new Error('empty')) {
@@ -41,9 +41,9 @@ empty()
 	.pipe(throwIfEmpty(() => new Error('throw if empty')))
 	.subscribe(
 		v => {
-			logValue('value: ', v);
+			console.log('value: ', v);
 		},
 		err => {
-			logValue('expected error thrown');
+			console.log('expected error thrown');
 		}
 	);

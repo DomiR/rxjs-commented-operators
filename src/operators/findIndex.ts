@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { findIndex as findIndexOriginal } from 'rxjs/operators';
 
 export function findIndex<T>(
@@ -21,7 +21,7 @@ export function findIndex<T>(
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (predicate(value, i, source)) {
 						observer.next(i);
 						observer.complete();
@@ -30,11 +30,11 @@ export function findIndex<T>(
 					i += 1;
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (shouldComplete) {
 						observer.complete();
 					}
@@ -50,5 +50,5 @@ export function findIndex<T>(
 of(1, 2, 1000, 3)
 	.pipe(findIndex(i => i > 100))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

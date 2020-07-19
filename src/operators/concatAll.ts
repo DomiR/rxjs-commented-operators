@@ -7,7 +7,7 @@
 
 import { Observable, of, Subscription, timer, interval, from } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { logValue } from '../utils';
+
 import { concatAll as concatAllOriginal } from 'rxjs/operators';
 
 export function concatAll<T>() {
@@ -41,16 +41,16 @@ export function concatAll<T>() {
 
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					innerObservables.push(value);
 					subscribeToNextInner();
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					if (activeSubscription == null && innerObservables.length == 0) {
 						observer.complete();
 					}

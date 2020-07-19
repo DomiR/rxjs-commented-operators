@@ -6,7 +6,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { skipLast as skipLastOriginal } from 'rxjs/operators';
 
 export function skipLast<T>(count: number) {
@@ -34,5 +34,5 @@ export function skipLast<T>(count: number) {
 of(1, 2, 3)
 	.pipe(skipLast(1))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

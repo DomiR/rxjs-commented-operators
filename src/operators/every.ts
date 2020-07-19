@@ -8,7 +8,7 @@
  */
 
 import { Observable, of, Subscription, timer, interval, empty, VirtualTimeScheduler } from 'rxjs';
-import { logValue } from '../utils';
+
 import { every as everyOriginal } from 'rxjs/operators';
 
 export function every<T>(predicate: (value: T, index: number, source: Observable<T>) => boolean) {
@@ -18,17 +18,17 @@ export function every<T>(predicate: (value: T, index: number, source: Observable
 			let index = 0;
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					if (stillEvery && !predicate(value, index++, source)) {
 						stillEvery = false;
 					}
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					observer.next(stillEvery);
 					observer.complete();
 				}
@@ -43,5 +43,5 @@ export function every<T>(predicate: (value: T, index: number, source: Observable
 of(1, 2, 3)
 	.pipe(everyOriginal(v => v < 100000))
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});

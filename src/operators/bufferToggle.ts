@@ -7,7 +7,7 @@
 import { fromEvent, EMPTY } from 'rxjs';
 
 import { Observable, of, Subscription, timer, interval } from 'rxjs';
-import { logValue } from '../utils';
+
 import { bufferToggle as bufferToggleOriginal, take, tap } from 'rxjs/operators';
 
 interface Context<T> {
@@ -50,7 +50,7 @@ export function bufferToggle<T, O>(
 			);
 			const sourceSubscription = source.subscribe(
 				value => {
-					logValue('source value: ', value);
+					console.log('source value: ', value);
 					// We store our value in every buffer we currently have open
 					for (const context of contexts) {
 						context.buffer.push(value);
@@ -58,11 +58,11 @@ export function bufferToggle<T, O>(
 					// We also subscribe to the closingObervable
 				},
 				err => {
-					logValue('source err: ', err);
+					console.log('source err: ', err);
 					observer.error(err);
 				},
 				() => {
-					logValue('source complete');
+					console.log('source complete');
 					for (const context of contexts) {
 						context.subscription.unsubscribe();
 						observer.next(context.buffer);
@@ -95,5 +95,5 @@ interval(100)
 		bufferToggle(interval(160), v => timer(200))
 	)
 	.subscribe(v => {
-		logValue('value: ', v);
+		console.log('value: ', v);
 	});
