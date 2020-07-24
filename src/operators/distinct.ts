@@ -7,10 +7,8 @@
  * @version 0.0.1
  */
 
-import { Observable, of, Subscription, timer, interval, empty } from 'rxjs';
-
+import { Observable, of, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { distinct as distinctOriginal } from 'rxjs/operators';
 
 export function distinct<T, K>(keySelector?: (value: T) => K, flushes?: Observable<any>) {
 	return (source: Observable<T>) =>

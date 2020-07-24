@@ -13,7 +13,8 @@ Otherwise please dig into the operators.
 **Easy**
 
 - [x] catchError ([commented](./src/operators/catchError.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/catchError), [playground](https://stackblitz.com/edit/rxjs-ypydct))
-- [ ] count ([commented](./src/operators/count.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/count))
+- [x] retry ([commented](./src/operators/retry.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/retry))
+- [x] count ([commented](./src/operators/count.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/count))
 - [ ] distinct ([commented](./src/operators/distinct.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/distinct))
 - [ ] distinctUntilChanged ([commented](./src/operators/distinctUntilChanged.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilChanged))
 - [ ] distinctUntilKeyChanged ([commented](./src/operators/distinctUntilKeyChanged.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilKeyChanged))
@@ -46,7 +47,6 @@ Otherwise please dig into the operators.
 - [ ] onErrorResumeNext ([commented](./src/operators/onErrorResumeNext.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/onErrorResumeNext))
 - [ ] pluck ([commented](./src/operators/pluck.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/pluck))
 - [ ] reduce ([commented](./src/operators/reduce.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/reduce))
-- [ ] retry ([commented](./src/operators/retry.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/retry))
 - [ ] retryWhen ([commented](./src/operators/retryWhen.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/retryWhen))
 - [ ] skip ([commented](./src/operators/skip.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/skip))
 - [ ] skipLast ([commented](./src/operators/skipLast.ts), [source](https://rxjs-dev.firebaseapp.com/api/operators/skipLast))
